@@ -1,0 +1,49 @@
+<nav class="left drawer small-space">
+    <header>
+        <nav>
+            <i class="circle extra">psychiatry</i>
+            <h6>greenguard</h6>
+        </nav>
+    </header>
+    <a href="/" class="@IsCurrentPath("/")">
+        <i class="square">home_and_garden</i>
+        <div>Overview</div>
+    </a>
+    <a href="/plants" class="@IsCurrentPath("/plants")">
+        <i>potted_plant</i>
+        <div>Plants</div>
+    </a>
+    <a href="/settings" class="@IsCurrentPath("/settings")">
+        <i>settings</i>
+        <div>Settings</div>
+    </a>
+</nav>
+
+@code {
+
+    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; }
+
+    private string IsCurrentPath(string? path)
+    {
+        var cssClass = "active";
+        var currentPath = HttpContextAccessor?.HttpContext?.Request.Path.Value ?? "";
+
+        if (string.IsNullOrEmpty(path) && string.IsNullOrEmpty(currentPath))
+        {
+            return cssClass;
+        }
+
+        if (path == "/" && currentPath == "/")
+        {
+            return cssClass;
+        }
+
+        if (path != "/" && currentPath.StartsWith(path ?? ""))
+        {
+            return cssClass;
+        }
+        
+        return "";
+    }
+
+}
