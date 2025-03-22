@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Interface\Layouts\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
 

@@ -9,7 +9,9 @@ public static class DefaultEndpoints
     {
         builder.MapGet("/", () => new RazorHxResult<Overview>());
         builder.MapGet("/plants", () => new RazorHxResult<Plants>());
+        builder.MapGet("/hubs", () => new RazorHxResult<Hubs>());
         builder.MapGet("/settings", () => new RazorHxResult<Settings>());
+        builder.MapGet("/login", () => new RazorHxResult<Login>());
 
         return builder;
     }
