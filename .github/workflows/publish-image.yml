@@ -1,0 +1,73 @@
+﻿name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: write
+  packages: write
+  attestations: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # depth is needed for nbgv
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Setup Nerdbank.GitVersioning
+        uses: dotnet/nbgv@master
+        id: nbgv
+        with:
+          setAllVars: true
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: src
+          file: src/greenguard/web/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.nbgv.outputs.SemVer2 }}
+
+      - name: Delete untagged images
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 5
+          package-name: greenguard
+          package-type: container
+
+      - name: Create Release
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: context.ref,
+              name: "${{ steps.nbgv.outputs.SemVer2 }}",
+              draft: false,
+              prerelease: true,
+              generate_release_notes: true
+            })

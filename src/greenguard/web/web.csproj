@@ -11,6 +11,10 @@
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="Marten" Version="7.39.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
+        <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Npgsql.DependencyInjection" Version="9.0.3" />
         <PackageReference Include="RazorHx" Version="0.2.0" />
     </ItemGroup>
