@@ -22,4 +22,3 @@ jobs:
         run: dotnet build -c Release
       - name: Test
         run: dotnet test -c Release --no-build
-      - uses: TooMuch4U/runner-post-cleanup@v2.1
