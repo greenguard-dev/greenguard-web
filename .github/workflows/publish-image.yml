@@ -51,14 +51,6 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.nbgv.outputs.SemVer2 }}
 
-      - name: Delete untagged images
-        uses: actions/delete-package-versions@v5
-        with:
-          delete-only-untagged-versions: true
-          min-versions-to-keep: 5
-          package-name: greenguard
-          package-type: container
-
       - name: Create Release
         uses: actions/github-script@v5
         with:
@@ -72,3 +64,11 @@ jobs:
               prerelease: true,
               generate_release_notes: true
             })
+            
+      - name: Delete untagged images
+        uses: actions/delete-package-versions@v5
+        with:
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 5
+          package-name: greenguard-web
+          package-type: container
