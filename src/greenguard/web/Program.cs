@@ -5,6 +5,7 @@ using RazorHx.DependencyInjection;
 using Weasel.Core;
 using web.Endpoints;
 using web.Services.Authentication;
+using web.Services.Version;
 using web.Store;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,8 @@ builder.Services.AddMarten(options =>
 }).UseLightweightSessions().UseNpgsqlDataSource();
 
 builder.Services.AddScoped<UserManagementService>();
+builder.Services.AddSingleton<IVersionInfo>(new VersionInfo
+    { Version = ThisAssembly.AssemblyFileVersion, InformationalVersion = ThisAssembly.AssemblyInformationalVersion });
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
