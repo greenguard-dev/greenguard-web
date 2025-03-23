@@ -1,7 +1,4 @@
-<nav class="left m l medium-space bottom-padding top-padding background">
-    <header>
-        <img class="small" src="/psychiatry.svg" alt="logo">
-    </header>
+<nav class="bottom s">
     <a href="/" class="@IsCurrentPath("/")">
         <i>home_and_garden</i>
         <div>Home</div>
@@ -14,15 +11,27 @@
         <i>sensors</i>
         <div>Hubs</div>
     </a>
-    <div class="max"></div>
     <a href="/settings" class="@IsCurrentPath("/settings")">
         <i>settings</i>
         <div>Settings</div>
     </a>
-    <a href="/logout">
-        <i>logout</i>
-    </a>
+    <button class="transparent circle" data-ui="#more-menu">
+        <i>menu</i>
+    </button>
 </nav>
+
+<dialog class="bottom scroll" id="more-menu">
+    <ul class="list">
+        <li>
+            <a href="/logout">
+                <i>logout</i>
+                <div class="max">
+                    <h6 class="small">Logout</h6>
+                </div>
+            </a>
+        </li>
+    </ul>
+</dialog>
 
 @code {
 
@@ -47,7 +56,7 @@
         {
             return cssClass;
         }
-        
+
         return "";
     }
 

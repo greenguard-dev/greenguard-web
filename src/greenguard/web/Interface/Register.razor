@@ -1,0 +1,44 @@
+﻿<main class="padding responsive">
+    <article class="large-padding auto-width absolute center middle">
+        <form hx-post="/register" class="grid large-space">
+            <div class="l12 m12 s12">
+                <nav>
+                    <i class="circle extra">psychiatry</i>
+                    <h4>greenguard</h4>
+                </nav>
+                <pre>0.0.1-alpha</pre>
+            </div>
+            <div class="l12 m12 s12 grid no-space">
+                <div class="l12 m12 s12">
+                    <div class="field label border">
+                        <input type="text" name="username">
+                        <label>Username</label>
+                    </div>
+                </div>
+                <div class="l12 m12 s12">
+                    <div class="l12 m12 s12 field label border">
+                        <input type="password" name="password">
+                        <label>Password</label>
+                    </div>
+                </div>
+                <div class="l12 m12 s12">
+                    <div class="l12 m12 s12 field label border">
+                        <input type="password" name="repeat">
+                        <label>Password (repeat)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="l12 m12 s12">
+                <nav>
+                    <a href="/login" class="button border">Login</a>
+                    <div class="max"></div>
+                    <button type="submit">Register</button>
+                </nav>
+            </div>
+        </form>
+    </article>
+</main>
+
+@code {
+
+}

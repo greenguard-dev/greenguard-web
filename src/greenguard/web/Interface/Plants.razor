@@ -1,8 +1,40 @@
 @using web.Interface.Layouts
 @layout MainLayout
 
-<div class="horizontal-padding page right active">
+<div class="padding page right active">
     <h4>Plants</h4>
+    <div class="grid">
+        <article class="no-padding l6 m12 l m">
+            <div class="grid no-space small-height">
+                <div class="m4 l4 small-height center-align middle-align">
+                    @* <img class="responsive" src="https://www.beercss.com/beer-and-woman.svg"> *@
+                    <form hx-post="/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+                        <button class="square round extra fill">
+                            <i>add_photo_alternate</i>
+                            <input name="photo" type="file">
+                        </button>
+                    </form>
+                </div>
+                <div class="m8 l8 small-height padding">
+                    <h5>Plant</h5>
+                </div>
+            </div>
+        </article>
+        <article class="no-padding s12 s">
+            <div class="max padding center-align middle-align">
+                <form hx-post="/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+                    <button class="square round extra fill">
+                        <i>add_photo_alternate</i>
+                        <input name="photo" type="file">
+                    </button>
+                </form>
+            </div>
+            <div class="padding">
+                <h5>Plant</h5>
+            </div>
+        </article>
+
+    </div>
 </div>
 
 <div class="fixed bottom right margin m l">
