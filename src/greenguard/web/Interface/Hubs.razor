@@ -92,10 +92,17 @@
 
     protected override Task OnInitializedAsync()
     {
-        if (HttpContextAccessor.HttpContext != null)
+        if (HttpContextAccessor.HttpContext == null) return base.OnInitializedAsync();
+        
+        var isHttps = HttpContextAccessor.HttpContext.Request.IsHttps;
+
+        if (isHttps)
         {
-            // get the curent address with protocol and port if available
-            _currentAddress = HttpContextAccessor.HttpContext.Request.Scheme + "://" + HttpContextAccessor.HttpContext.Request.Host;
+            _currentAddress = "https://" + HttpContextAccessor.HttpContext.Request.Host;
+        }
+        else
+        {
+            _currentAddress = "http://" + HttpContextAccessor.HttpContext.Request.Host;
         }
 
         return base.OnInitializedAsync();
