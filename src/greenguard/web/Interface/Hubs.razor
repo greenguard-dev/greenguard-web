@@ -6,7 +6,99 @@
 </div>
 
 <div class="fixed bottom right margin m l">
-    <button class="square round extra">
+    <button class="square round extra no-margin" data-ui="#add-hub">
         <i>add</i>
     </button>
 </div>
+
+<div class="fixed top right margin s">
+    <button class="square round small-margin" data-ui="#add-hub">
+        <i>add</i>
+    </button>
+</div>
+
+<dialog id="add-hub" class="modal responsive">
+    <h5>Register Hub</h5>
+    <div class="grid space">
+        <details class="l12 m12 s12">
+            <summary>
+                <article class="surface-container-highest no-elevate">
+                    <nav>
+                        <div class="max">Network Settings</div>
+                        <i>expand_more</i>
+                    </nav>
+                </article>
+            </summary>
+            <div class="s12 grid">
+                <div class="s12">
+                    <div class="field label round fill no-margin">
+                        <input type="text" name="endpoint" value="@_currentAddress">
+                        <label>Instance URL</label>
+                    </div>
+                </div>
+                <div class="s12">
+                    <div class="field label round fill no-margin">
+                        <input type="text" name="ssid">
+                        <label>WiFi SSID</label>
+                    </div>
+                </div>
+                <div class="s12">
+                    <div class="s12 field label round fill no-margin">
+                        <input type="password" name="password">
+                        <label>WiFi Password</label>
+                    </div>
+                </div>
+                <pre class="s12">The SSID and password will not be stored. Its only used for the hub.</pre>
+            </div>
+        </details>
+        <details class="l12 m12 s12">
+            <summary>
+                <article class="surface-container-highest no-elevate">
+                    <nav>
+                        <div class="max">Device Settings</div>
+                        <i>expand_more</i>
+                    </nav>
+                </article>
+            </summary>
+            <div class="s12 grid">
+                <div class="s12">
+                    <div class="s12 field label round fill no-margin">
+                        <input type="text" name="name">
+                        <label>Name (optional)</label>
+                    </div>
+                </div>
+                <div class="s12">
+                    <div class="field label round fill no-margin">
+                        <select>
+                            <option>XIAO ESP32C6</option>
+                            <option>XIAO ESP32C3</option>
+                        </select>
+                        <label>Device ID</label>
+                    </div>
+                </div>
+            </div>
+        </details>
+    </div>
+    <nav class="right-align">
+        <button class="">Download Flasher</button>
+        <button class="fill" data-ui="#add-hub">Close</button>
+    </nav>
+</dialog>
+
+@code {
+    [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+    private string? _currentAddress = null;
+
+    protected override Task OnInitializedAsync()
+    {
+        if (HttpContextAccessor.HttpContext != null)
+        {
+            // get the curent address with protocol and port if available
+            _currentAddress = HttpContextAccessor.HttpContext.Request.Scheme + "://" + HttpContextAccessor.HttpContext.Request.Host;
+        }
+
+        return base.OnInitializedAsync();
+    }
+
+}
