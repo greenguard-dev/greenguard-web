@@ -7,10 +7,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["web/web.csproj", "web/"]
-RUN dotnet restore "web/web.csproj"
+#COPY ["src/greenguard/web/web.csproj", "web/"]
 COPY . .
-WORKDIR "/src/web"
+WORKDIR "src/greenguard/web"
+RUN dotnet restore "web.csproj"
 RUN dotnet build "web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
