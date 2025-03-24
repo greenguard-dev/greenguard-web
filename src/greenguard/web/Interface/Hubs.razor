@@ -24,51 +24,20 @@
             <summary>
                 <article class="surface-container-highest no-elevate">
                     <nav>
-                        <div class="max">Network Settings</div>
+                        <div class="max">Device configuration</div>
                         <i>expand_more</i>
                     </nav>
                 </article>
             </summary>
             <div class="s12 grid">
                 <div class="s12">
-                    <div class="field label round fill no-margin">
-                        <input type="text" name="endpoint" value="@_currentAddress">
-                        <label>Instance URL</label>
-                    </div>
-                </div>
-                <div class="s12">
-                    <div class="field label round fill no-margin">
-                        <input type="text" name="ssid">
-                        <label>WiFi SSID</label>
-                    </div>
-                </div>
-                <div class="s12">
-                    <div class="s12 field label round fill no-margin">
-                        <input type="password" name="password">
-                        <label>WiFi Password</label>
-                    </div>
-                </div>
-                <pre class="s12">The SSID and password will not be stored. Its only used for the hub.</pre>
-            </div>
-        </details>
-        <details class="l12 m12 s12">
-            <summary>
-                <article class="surface-container-highest no-elevate">
-                    <nav>
-                        <div class="max">Device Settings</div>
-                        <i>expand_more</i>
-                    </nav>
-                </article>
-            </summary>
-            <div class="s12 grid">
-                <div class="s12">
-                    <div class="s12 field label round fill no-margin">
+                    <div class="s12 field label border fill no-margin">
                         <input type="text" name="name">
                         <label>Name (optional)</label>
                     </div>
                 </div>
                 <div class="s12">
-                    <div class="field label round fill no-margin">
+                    <div class="field label border fill no-margin">
                         <select>
                             <option>XIAO ESP32C6</option>
                             <option>XIAO ESP32C3</option>
@@ -76,6 +45,38 @@
                         <label>Device ID</label>
                     </div>
                 </div>
+            </div>
+        </details>
+        <details class="l12 m12 s12">
+            <summary>
+                <article class="surface-container-highest no-elevate">
+                    <nav>
+                        <div class="max">Network configuration</div>
+                        <i>expand_more</i>
+                    </nav>
+                </article>
+            </summary>
+            <div class="s12 grid">
+                <div class="s12">
+                    <div class="field label border fill no-margin">
+                        <input type="text" name="endpoint" value="@_currentAddress">
+                        <label>Instance URL</label>
+                    </div>
+                </div>
+                <pre class="s12">If the instance is hosted with HTTPS, the CA root certificate must be made available to the hub. greenguard will retrieve the certificate if the protocol is HTTPS.</pre>
+                <div class="s12">
+                    <div class="field label border fill no-margin">
+                        <input type="text" name="ssid">
+                        <label>WiFi SSID</label>
+                    </div>
+                </div>
+                <div class="s12">
+                    <div class="s12 field label border fill no-margin">
+                        <input type="password" name="password">
+                        <label>WiFi Password</label>
+                    </div>
+                </div>
+                <pre class="s12">The SSID and password of the access point are not saved in greenguard. They are only made available to the hub.</pre>
             </div>
         </details>
     </div>
