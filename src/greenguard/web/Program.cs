@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using RazorHx.Builder;
 using RazorHx.DependencyInjection;
+using RazorHx.Htmx.HttpContextFeatures;
 using Weasel.Core;
 using web.Endpoints;
 using web.Services.Authentication;
@@ -41,6 +42,22 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
         options.SlidingExpiration = true;
         options.LoginPath = "/login";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            var htmxRequestFeature = context.HttpContext.Features.Get<IHtmxRequestFeature>();
+            if (htmxRequestFeature?.CurrentRequest.Request == true)
+            {
+                // Force htmx to refresh the page
+                context.Response.Headers["HX-Refresh"] = "true";
+            }
+            else
+            {
+                context.Response.Redirect(context.RedirectUri);
+            }
+
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToAccessDenied = context => Task.CompletedTask;
     });
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

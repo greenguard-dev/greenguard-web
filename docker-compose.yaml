@@ -15,7 +15,7 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s
-  ployd:
+  greenguard-web:
     container_name: greenguard-web
     image: ghcr.io/greenguard-dev/greenguard-web:latest
     ports:
