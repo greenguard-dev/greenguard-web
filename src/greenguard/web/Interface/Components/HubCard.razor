@@ -1,15 +1,27 @@
-﻿<article class="no-padding l12 m12 l m">
-    <div class="grid no-space small-height">
-        <div class="m8 l8 small-height padding">
-            <h5>@Name</h5>
+﻿@using web.Store
+<article class="l12 m12 s12 l m s">
+    <div>
+        <div class="row bottom-margin">
+            <h6>@Hub.Name</h6>
+            <div class="max"></div>
+            <i>signal_disconnected</i>
         </div>
+        <span class="chip no-margin">@Hub.DeviceId.ToString()</span>
+        @if (Hub.Endpoint != null)
+        {
+            <span class="chip">@Hub.Endpoint?.ToString()</span>
+        }
+        else
+        {
+            <span class="chip">Local</span>
+        }
     </div>
+    <nav class="right-align">
+        <button class="fill">Firmware</button>
+        <button class="fill">Configure</button>
+    </nav>
 </article>
-<article class="no-padding s12 s">
-    <div class="padding">
-        <h5>@Name</h5>
-    </div>
-</article>
+
 @code {
-    [Parameter, EditorRequired] public required string Name { get; set; }
+    [Parameter, EditorRequired] public required Hub Hub { get; set; }
 }
