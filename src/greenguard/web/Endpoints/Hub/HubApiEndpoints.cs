@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using web.Endpoints.Hub.Requests;
 using web.Services.Hub;
 
 namespace web.Endpoints.Hub;

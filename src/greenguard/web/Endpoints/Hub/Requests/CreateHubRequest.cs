@@ -1,6 +1,6 @@
 ﻿using web.Store;
 
-namespace web.Endpoints.Hub;
+namespace web.Endpoints.Hub.Requests;
 
 public class CreateHubRequest
 {
