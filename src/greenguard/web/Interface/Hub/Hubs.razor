@@ -1,0 +1,44 @@
+@using web.Interface.Layouts
+@using web.Store
+@using web.Interface.Components
+@layout MainLayout
+
+<div class="padding page right active">
+    <h4>Hubs</h4>
+    <div id="hub-list" class="grid"
+         hx-get="/hubs"
+         hx-trigger="hub-added from:body"
+         hx-select="#hub-list"
+         hx-target="#hub-list"
+         hx-swap="outerHTML">
+        @foreach (var hub in HubList)
+        {
+            <HubCard Name="@hub.Name"></HubCard>
+        }
+    </div>
+</div>
+
+<div class="fixed bottom right margin m l">
+    <button class="square round extra no-margin"
+            hx-get="/hubs/register"
+            hx-target="#add-hub"
+            hx-on::after-request="ui('#add-hub')">
+        <i>add</i>
+    </button>
+</div>
+
+<div class="fixed top right margin s">
+    <button class="square round small-margin"
+            hx-get="/hubs/register"
+            hx-target="#add-hub"
+            hx-on::after-request="ui('#add-hub')">
+        <i>add</i>
+    </button>
+</div>
+
+<dialog id="add-hub" class="modal responsive">
+</dialog>
+
+@code {
+    [Parameter] public IReadOnlyList<Hub> HubList { get; set; } = [];
+}

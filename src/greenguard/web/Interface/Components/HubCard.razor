@@ -1,0 +1,15 @@
+﻿<article class="no-padding l6 m12 l m">
+    <div class="grid no-space small-height">
+        <div class="m8 l8 small-height padding">
+            <h5>@Name</h5>
+        </div>
+    </div>
+</article>
+<article class="no-padding s12 s">
+    <div class="padding">
+        <h5>@Name</h5>
+    </div>
+</article>
+@code {
+    [Parameter, EditorRequired] public required string Name { get; set; }
+}

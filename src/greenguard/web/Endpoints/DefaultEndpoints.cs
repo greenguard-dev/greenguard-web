@@ -1,3 +1,4 @@
+using Marten;
 using RazorHx.Results;
 using web.Interface;
 
@@ -9,7 +10,6 @@ public static class DefaultEndpoints
     {
         builder.MapGet("/", () => new RazorHxResult<Home>()).RequireAuthorization();
         builder.MapGet("/plants", () => new RazorHxResult<Plants>()).RequireAuthorization();
-        builder.MapGet("/hubs", () => new RazorHxResult<Hubs>()).RequireAuthorization();
         builder.MapGet("/settings", () => new RazorHxResult<Settings>()).RequireAuthorization();
         builder.MapPost("/upload", async (HttpContext context) =>
         {

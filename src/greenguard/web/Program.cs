@@ -88,6 +88,7 @@ app.UseAuthorization();
 app.UseRazorHxComponents();
 
 app.MapHub();
+app.MapApiHub();
 app.MapDefault();
 app.MapAuthenticaton();
 
