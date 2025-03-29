@@ -1,0 +1,15 @@
+﻿POST http://localhost:5218/api/hub
+
+Content-Type: application/json
+
+{
+}
+
+###
+
+GET http://localhost:5218/api/hub/d5dd1ba5-97ea-4b86-af82-a4e6c4efd400/scan
+
+Content-Type: application/json
+
+{
+}

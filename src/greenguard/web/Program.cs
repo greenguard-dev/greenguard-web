@@ -6,7 +6,9 @@ using RazorHx.DependencyInjection;
 using RazorHx.Htmx.HttpContextFeatures;
 using Weasel.Core;
 using web.Endpoints;
+using web.Endpoints.Hub;
 using web.Services.Authentication;
+using web.Services.Hub;
 using web.Services.Version;
 using web.Store;
 
@@ -23,6 +25,7 @@ builder.Services.AddMarten(options =>
     options.UseSystemTextJsonForSerialization();
 
     options.Schema.For<User>();
+    options.Schema.For<Hub>();
 
     if (builder.Environment.IsDevelopment())
     {
@@ -33,6 +36,8 @@ builder.Services.AddMarten(options =>
 builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddSingleton<IVersionInfo>(new VersionInfo
     { Version = ThisAssembly.AssemblyFileVersion, InformationalVersion = ThisAssembly.AssemblyInformationalVersion });
+builder.Services.AddScoped<IHubService, HubService>();
+builder.Services.AddHttpClient<IHubClient, HubClient>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -82,6 +87,7 @@ app.UseAuthorization();
 
 app.UseRazorHxComponents();
 
+app.MapHub();
 app.MapDefault();
 app.MapAuthenticaton();
 
