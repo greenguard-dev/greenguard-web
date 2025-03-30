@@ -1,11 +1,15 @@
 @using web.Interface.Layouts
 @using web.Interface.Components
+@using web.Store
 @layout MainLayout
 
 <div class="padding page right active">
     <h4>Plants</h4>
     <div class="grid">
-        <PlantCard />
+        @foreach (var plant in PlantsList)
+        {
+            <PlantCard Plant="plant.Item1" PlantMeasurement="plant.Item2"/>
+        }
     </div>
 </div>
 
@@ -20,3 +24,7 @@
         <i>add</i>
     </button>
 </div>
+
+@code {
+    [Parameter] public IReadOnlyList<(Plant, PlantMeasurement)> PlantsList { get; set; } = [];
+}

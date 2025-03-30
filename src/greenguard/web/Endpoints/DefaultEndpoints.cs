@@ -9,7 +9,6 @@ public static class DefaultEndpoints
     public static IEndpointRouteBuilder MapDefault(this IEndpointRouteBuilder builder)
     {
         builder.MapGet("/", () => new RazorHxResult<Home>()).RequireAuthorization();
-        builder.MapGet("/plants", () => new RazorHxResult<Plants>()).RequireAuthorization();
         builder.MapGet("/settings", () => new RazorHxResult<Settings>()).RequireAuthorization();
         builder.MapPost("/upload", async (HttpContext context) =>
         {

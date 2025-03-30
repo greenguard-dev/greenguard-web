@@ -1,4 +1,5 @@
-﻿<h5>Register Hub</h5>
+﻿@using web.Services
+<h5>Register Hub</h5>
 <form hx-post="/api/hub" hx-on:hub-added="ui('#add-hub')">
     <div>
         <div class="tabs">
@@ -69,29 +70,11 @@
     
     private string? _currentAddress = null;
     private string _plantName = string.Empty;
-
-    private static string[] _plantNames =
-    [
-        "Lysandra", "Thalia", "Zinnia", "Amaranth", "Saphira", "Calyx", "Thornis", "Petalyn", "Solara", "Virella",
-        "Acantha", "Lavendra", "Iriska", "Elowen", "Flora", "Orion", "Celestia", "Lumo", "Zephyr", "Nimbus",
-        "Solace", "Vega", "Astra", "Mira", "Ceres", "Sylphix", "Aqualis", "Florion", "Verdant", "Beryl",
-        "Sylva", "Vella", "Nova", "Fauna", "Elara", "Quilla", "Vaera", "Talia", "Aria", "Cassia", "Lyra",
-        "Irina", "Vega", "Fira", "Thalix", "Elysia", "Nysa", "Saphir", "Helia", "Calia"
-    ];
     
         
     protected override async Task OnInitializedAsync()
     {
-        var random = new Random();
-        var firstNameIndex = random.Next(0, _plantNames.Length);
-        var secondNameIndex = random.Next(0, _plantNames.Length);
-
-        while (firstNameIndex == secondNameIndex)
-        {
-            secondNameIndex = random.Next(0, _plantNames.Length);
-        }
-
-        _plantName = _plantNames[firstNameIndex] + " " + _plantNames[secondNameIndex];
+        _plantName = NameGenerator.GenerateName();
 
         if (HttpContextAccessor.HttpContext == null) return;
 

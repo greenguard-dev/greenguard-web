@@ -6,7 +6,7 @@ namespace web.Endpoints.Hub;
 
 public static class HubApiEndpoints
 {
-    public static IEndpointRouteBuilder MapApiHub(this IEndpointRouteBuilder builder)
+    public static IEndpointRouteBuilder MapApiHubEndpoints(this IEndpointRouteBuilder builder)
     {
         var hubGroup = builder.MapGroup("api/hub");
 

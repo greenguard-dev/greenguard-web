@@ -7,6 +7,7 @@ using RazorHx.Htmx.HttpContextFeatures;
 using Weasel.Core;
 using web.Endpoints;
 using web.Endpoints.Hub;
+using web.Endpoints.Plant.Hub;
 using web.Services.Authentication;
 using web.Services.Hub;
 using web.Services.Version;
@@ -87,8 +88,10 @@ app.UseAuthorization();
 
 app.UseRazorHxComponents();
 
-app.MapHub();
-app.MapApiHub();
+app.MapHubEndpoints();
+app.MapApiHubEndpoints();
+app.MapPlantEndpoints();
+app.MapPlantApiEndpoints();
 app.MapDefault();
 app.MapAuthenticaton();
 

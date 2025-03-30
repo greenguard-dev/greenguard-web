@@ -6,7 +6,7 @@ namespace web.Endpoints.Hub;
 
 public static class HubEndpoints
 {
-    public static IEndpointRouteBuilder MapHub(this IEndpointRouteBuilder builder)
+    public static IEndpointRouteBuilder MapHubEndpoints(this IEndpointRouteBuilder builder)
     {
         var hubGroup = builder.MapGroup("hubs");
         hubGroup.RequireAuthorization();
