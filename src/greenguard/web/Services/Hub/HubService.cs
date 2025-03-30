@@ -60,7 +60,7 @@ public class HubService : IHubService
         }
 
         hub.LastHealthCheck = DateTime.UtcNow;
-        _documentSession.Store(hub);
+        _documentSession.Update(hub);
 
         await _documentSession.SaveChangesAsync();
     }
