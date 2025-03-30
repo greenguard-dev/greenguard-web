@@ -8,6 +8,6 @@ public interface IHubService
     Task<Store.Hub?> GetHubAsync(Guid id);
     Task RegisterHubAsync(Guid id, string? name, DeviceId deviceId);
     Task DeleteHubAsync(Guid id);
-    Task HealthCheckAsync(Guid id, string? hubIp);
+    Task HealthCheckAsync(Guid id, string? hubIpAddress);
     Task ScanForDevicesAsync(Guid id);
 }

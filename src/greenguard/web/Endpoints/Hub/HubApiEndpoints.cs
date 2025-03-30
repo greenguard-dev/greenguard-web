@@ -46,9 +46,8 @@ public static class HubApiEndpoints
 
         hubGroup.MapGet("/{id:guid}/health", async (Guid id, IHubService hubService, HttpContext context) =>
         {
-            var hubIp = context.Request.Headers["x-greenguard-hub-ip"]
-                .FirstOrDefault() ?? context.Connection.RemoteIpAddress?.ToString();
-            await hubService.HealthCheckAsync(id, hubIp);
+            var hubIpAddress = context.Request.Headers["x-greenguard-hub-ip"];
+            await hubService.HealthCheckAsync(id, hubIpAddress);
             return Results.Ok();
         });
 

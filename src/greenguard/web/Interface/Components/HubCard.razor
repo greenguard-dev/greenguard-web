@@ -15,9 +15,9 @@
         </div>
         <div class="small-space"></div>
         <span class="chip no-margin">@Hub.DeviceId.ToString()</span>
-        @if (Hub.Endpoint != null)
+        @if (Hub.IpAddress != null)
         {
-            <span class="chip">@Hub.Endpoint</span>
+            <span class="chip">@Hub.IpAddress</span>
         }
         else
         {
