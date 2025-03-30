@@ -72,3 +72,13 @@ jobs:
           min-versions-to-keep: 5
           package-name: greenguard-web
           package-type: container
+
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: "New release of `greenguard`"
+          description: |
+            Version: `${{ steps.nbgv.outputs.SemVer2 }}`
+            Demo: [greenguard.dev](https://demo.greenguard.dev)

@@ -1,6 +1,6 @@
 ﻿using web.Services.Hub;
 
-namespace web.Endpoints.Plant.Hub;
+namespace web.Endpoints.Plant;
 
 public static class PlantApiEndpoints
 {

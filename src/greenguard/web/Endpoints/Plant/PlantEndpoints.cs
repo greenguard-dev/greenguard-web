@@ -5,7 +5,7 @@ using web.Interface.Hub;
 using web.Services;
 using web.Store;
 
-namespace web.Endpoints.Plant.Hub;
+namespace web.Endpoints.Plant;
 
 public static class PlantEndpoints
 {
@@ -32,6 +32,17 @@ public static class PlantEndpoints
                             { "Fertility", random.Next(0, 100) },
                         }
                 }),
+                (new Store.Plant { Id = Guid.NewGuid(), Name = NameGenerator.GenerateName() }, new PlantMeasurement
+                {
+                    Id = Guid.NewGuid(), Items =
+                        new Dictionary<string, int>
+                        {
+                            { "Humidity", random.Next(0, 100) },
+                            { "Temperature", random.Next(0, 100) },
+                            { "Light", random.Next(0, 100) },
+                            { "Fertility", random.Next(0, 100) },
+                        }
+                })
             ]);
 
             return new RazorHxResult<Plants>(new { PlantsList = plants });

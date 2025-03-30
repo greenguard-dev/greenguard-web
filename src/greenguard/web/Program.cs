@@ -7,7 +7,7 @@ using RazorHx.Htmx.HttpContextFeatures;
 using Weasel.Core;
 using web.Endpoints;
 using web.Endpoints.Hub;
-using web.Endpoints.Plant.Hub;
+using web.Endpoints.Plant;
 using web.Services.Authentication;
 using web.Services.Hub;
 using web.Services.Version;

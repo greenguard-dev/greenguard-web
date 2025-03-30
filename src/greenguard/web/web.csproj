@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Endpoints\Plant\Hub\Requests\" />
+      <Folder Include="Endpoints\Plant\Requests\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
