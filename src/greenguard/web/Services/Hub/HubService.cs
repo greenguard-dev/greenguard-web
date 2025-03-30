@@ -54,7 +54,7 @@ public class HubService : IHubService
             throw new InvalidOperationException("Hub not found");
         }
 
-        if (hubIpAddress != null)
+        if (hubIpAddress != null && hub.IpAddress != hubIpAddress)
         {
             hub.IpAddress = hubIpAddress;
         }
