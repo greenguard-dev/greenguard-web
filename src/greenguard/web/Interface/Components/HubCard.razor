@@ -1,11 +1,12 @@
 ﻿@using web.Store
 <article class="l12 m12 s12 l m s">
     <div>
-        <div class="row bottom-margin">
+        <div class="row">
             <h6>@Hub.Name</h6>
             <div class="max"></div>
             <i>signal_disconnected</i>
         </div>
+        <div class="small-space"></div>
         <span class="chip no-margin">@Hub.DeviceId.ToString()</span>
         @if (Hub.Endpoint != null)
         {

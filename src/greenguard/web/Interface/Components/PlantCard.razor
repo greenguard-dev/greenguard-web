@@ -1,0 +1,46 @@
+﻿<article class="no-padding l12 m12 l m">
+    <div class="grid no-space">
+        <div class="m4 l4 small-height center-align middle-align">
+            @* <img class="responsive" src="https://www.beercss.com/beer-and-woman.svg"> *@
+            <form hx-post="/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+                <button class="square round extra fill">
+                    <i>add_photo_alternate</i>
+                    <input name="photo" type="file">
+                </button>
+            </form>
+        </div>
+        <div class="m8 l8 small-height large-padding row top-align">
+            <h5 class="max">Plant</h5>
+            <div class="row">
+                <SensorMeter IconTop="humidity_high" IconBottom="humidity_low" Value="30" Max="100" Color="blue-text" />
+                <SensorMeter IconTop="brightness_7" IconBottom="brightness_5" Value="50" Max="100" Color="yellow-text" />
+                <SensorMeter IconTop="heat" IconBottom="ac_unit" Value="20" Max="100" Color="orange-text" />
+                <SensorMeter IconTop="water_do" IconBottom="salinity" Value="60" Max="100" Color="green-text" />
+            </div>
+        </div>
+    </div>
+</article>
+<article class="s12 s no-padding">
+    <div class="padding center-align middle-align">
+        <form hx-post="/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+            <button class="square round extra fill">
+                <i>add_photo_alternate</i>
+                <input name="photo" type="file">
+            </button>
+        </form>
+    </div>
+    <div class="padding max">
+        <h5 class="max">Plant</h5>
+        <div class="medium-space"></div>
+        <div class="row" style="height: 10rem">
+            <SensorMeter IconTop="humidity_high" IconBottom="humidity_low" Value="30" Max="100" Color="blue-text" />
+            <SensorMeter IconTop="brightness_7" IconBottom="brightness_5" Value="50" Max="100" Color="yellow-text" />
+            <SensorMeter IconTop="heat" IconBottom="ac_unit" Value="20" Max="100" Color="orange-text" />
+            <SensorMeter IconTop="water_do" IconBottom="salinity" Value="60" Max="100" Color="green-text" />
+        </div>
+    </div>
+</article>
+
+@code {
+
+}

@@ -1,0 +1,16 @@
+﻿<div class="row vertical middle-align max">
+    <span><i>@IconTop</i></span>
+    <article class="max surface">
+        <progress class="max vertical @Color" value="@Value" max="@Max"></progress>
+    </article>
+    <span><i>@IconBottom</i></span>
+</div>
+
+
+@code {
+    [Parameter] public string? Color { get; set; } = "blue-text";
+    [Parameter] public int Value { get; set; } = 0;
+    [Parameter] public int Max { get; set; } = 100;
+    [Parameter] public string IconTop { get; set; } = "psychiatry";
+    [Parameter] public string IconBottom { get; set; } = "psychiatry";
+}
