@@ -6,5 +6,5 @@ public class Hub
     public string? Name { get; set; }
     public Uri? Endpoint { get; set; }
     public DeviceId DeviceId { get; set; }
-    public bool IsConfirmed { get; set; }
+    public DateTime? LastHealthCheck { get; set; }
 }

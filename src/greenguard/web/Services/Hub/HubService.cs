@@ -32,15 +32,20 @@ public class HubService : IHubService
         {
             Id = id,
             Name = name,
-            DeviceId = deviceId,
-            IsConfirmed = false
+            DeviceId = deviceId
         };
 
         _documentSession.Store(hub);
         return _documentSession.SaveChangesAsync();
     }
 
-    public async Task ConfirmHubAsync(Guid id)
+    public Task DeleteHubAsync(Guid id)
+    {
+        _documentSession.Delete<Store.Hub>(id);
+        return _documentSession.SaveChangesAsync();
+    }
+
+    public async Task HealthCheckAsync(Guid id, string? remoteIp)
     {
         var hub = await _documentSession.LoadAsync<Store.Hub>(id);
 
@@ -49,14 +54,14 @@ public class HubService : IHubService
             throw new InvalidOperationException("Hub not found");
         }
 
-        hub.IsConfirmed = true;
+        if (remoteIp != null)
+        {
+            hub.Endpoint = new Uri($"http://{remoteIp}");
+        }
+        hub.LastHealthCheck = DateTime.UtcNow;
+        _documentSession.Store(hub);
+        
         await _documentSession.SaveChangesAsync();
-    }
-
-    public Task DeleteHubAsync(Guid id)
-    {
-        _documentSession.Delete<Store.Hub>(id);
-        return _documentSession.SaveChangesAsync();
     }
 
     public async Task ScanForDevicesAsync(Guid id)

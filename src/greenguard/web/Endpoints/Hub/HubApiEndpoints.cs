@@ -8,7 +8,7 @@ public static class HubApiEndpoints
 {
     public static IEndpointRouteBuilder MapApiHubEndpoints(this IEndpointRouteBuilder builder)
     {
-        var hubGroup = builder.MapGroup("api/hub");
+        var hubGroup = builder.MapGroup("api/hubs");
 
         hubGroup.MapGet("/", async (IHubService hubService) =>
         {
@@ -38,15 +38,16 @@ public static class HubApiEndpoints
             return Results.Ok();
         });
 
-        hubGroup.MapPatch("/{id:guid}", async (Guid id, IHubService hubService) =>
-        {
-            await hubService.ConfirmHubAsync(id);
-            return Results.Ok();
-        });
-
         hubGroup.MapGet("/{id:guid}/scan", async (Guid id, IHubService hubService) =>
         {
             await hubService.ScanForDevicesAsync(id);
+            return Results.Ok();
+        });
+        
+        hubGroup.MapGet("/{id:guid}/health", async (Guid id, IHubService hubService, HttpContext context) =>
+        {
+            var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+            await hubService.HealthCheckAsync(id, remoteIp);
             return Results.Ok();
         });
 
