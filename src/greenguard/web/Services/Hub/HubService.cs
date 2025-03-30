@@ -45,7 +45,7 @@ public class HubService : IHubService
         return _documentSession.SaveChangesAsync();
     }
 
-    public async Task HealthCheckAsync(Guid id, string? remoteIp)
+    public async Task HealthCheckAsync(Guid id, string? hubIp)
     {
         var hub = await _documentSession.LoadAsync<Store.Hub>(id);
 
@@ -54,13 +54,14 @@ public class HubService : IHubService
             throw new InvalidOperationException("Hub not found");
         }
 
-        if (remoteIp != null)
+        if (hubIp != null)
         {
-            hub.Endpoint = new Uri($"http://{remoteIp}");
+            hub.Endpoint = $"http://{hubIp}";
         }
+
         hub.LastHealthCheck = DateTime.UtcNow;
         _documentSession.Store(hub);
-        
+
         await _documentSession.SaveChangesAsync();
     }
 

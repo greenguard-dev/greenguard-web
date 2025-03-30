@@ -12,7 +12,7 @@ public class HubClient : IHubClient
     public async Task ScanForDevicesAsync(Store.Hub hub)
     {
         var endpoint = hub.Endpoint ?? throw new InvalidOperationException("Hub endpoint is not set");
-        _httpClient.BaseAddress = endpoint;
+        _httpClient.BaseAddress = new Uri(endpoint);
         
         const string path = "/devices/scan";
         

@@ -26,9 +26,9 @@ public static class HubApiEndpoints
             async ([FromForm] CreateHubRequest createHubRequest, IHubService hubService, HttpContext context) =>
             {
                 await hubService.RegisterHubAsync(Guid.NewGuid(), createHubRequest.Name, createHubRequest.DeviceId);
-                
+
                 context.Response.Headers["HX-Trigger"] = "hub-added";
-                
+
                 return Results.Ok();
             }).DisableAntiforgery();
 
@@ -43,11 +43,12 @@ public static class HubApiEndpoints
             await hubService.ScanForDevicesAsync(id);
             return Results.Ok();
         });
-        
+
         hubGroup.MapGet("/{id:guid}/health", async (Guid id, IHubService hubService, HttpContext context) =>
         {
-            var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-            await hubService.HealthCheckAsync(id, remoteIp);
+            var hubIp = context.Request.Headers["x-greenguard-hub-ip"]
+                .FirstOrDefault() ?? context.Connection.RemoteIpAddress?.ToString();
+            await hubService.HealthCheckAsync(id, hubIp);
             return Results.Ok();
         });
 
