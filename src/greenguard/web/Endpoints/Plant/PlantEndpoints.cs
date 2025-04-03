@@ -2,7 +2,9 @@
 using RazorHx.Results;
 using web.Interface;
 using web.Interface.Hub;
+using web.Interface.Plant;
 using web.Services;
+using web.Services.Plant;
 using web.Store;
 
 namespace web.Endpoints.Plant;
@@ -14,41 +16,55 @@ public static class PlantEndpoints
         var hubGroup = builder.MapGroup("plants");
         hubGroup.RequireAuthorization();
 
-        hubGroup.MapGet("/", async (IDocumentSession documentSession) =>
+        hubGroup.MapGet("/", async (IPlantService plantService) =>
         {
-            var plants = new List<(Store.Plant plant, PlantMeasurement measurement)>();
+            var plants = await plantService.GetPlantsAsync();
+            var plantMeasurements = new List<PlantMeasurement>();
 
             var random = new Random();
 
-            plants.AddRange([
-                (new Store.Plant { Id = Guid.NewGuid(), Name = NameGenerator.GenerateName(), ImageUrl = "/monstera.jpeg"}, new PlantMeasurement
+            plantMeasurements.AddRange([
+                new PlantMeasurement
                 {
-                    Id = Guid.NewGuid(), Items =
-                        new Dictionary<string, int>
-                        {
-                            { "Humidity", random.Next(0, 100) },
-                            { "Temperature", random.Next(0, 100) },
-                            { "Light", random.Next(0, 100) },
-                            { "Fertility", random.Next(0, 100) },
-                        }
-                }),
-                (new Store.Plant { Id = Guid.NewGuid(), Name = NameGenerator.GenerateName() }, new PlantMeasurement
+                    Id = Guid.NewGuid(),
+                    PlantId = Guid.Empty,
+                    Items = new Dictionary<string, int>
+                    {
+                        { "Humidity", random.Next(0, 100) },
+                        { "Temperature", random.Next(0, 100) },
+                        { "Light", random.Next(0, 100) },
+                        { "Fertility", random.Next(0, 100) },
+                    }
+                },
+                new PlantMeasurement
                 {
-                    Id = Guid.NewGuid(), Items =
-                        new Dictionary<string, int>
-                        {
-                            { "Humidity", random.Next(0, 100) },
-                            { "Temperature", random.Next(0, 100) },
-                            { "Light", random.Next(0, 100) },
-                            { "Fertility", random.Next(0, 100) },
-                        }
-                })
+                    Id = Guid.NewGuid(),
+                    PlantId = Guid.Empty,
+                    Items = new Dictionary<string, int>
+                    {
+                        { "Humidity", random.Next(0, 100) },
+                        { "Temperature", random.Next(0, 100) },
+                        { "Light", random.Next(0, 100) },
+                        { "Fertility", random.Next(0, 100) },
+                    }
+                }
             ]);
 
-            return new RazorHxResult<Plants>(new { PlantsList = plants });
+            var plantsWithMeasurements = new List<(Store.Plant, PlantMeasurement?)>();
+
+            foreach (var plant in plants)
+            {
+                var measurement = plantMeasurements.FirstOrDefault(m => m.PlantId == plant.Id);
+                plantsWithMeasurements.Add(measurement != null ? (plant, measurement) : (plant, null));
+            }
+
+            // Sort the plants by name
+            plantsWithMeasurements = plantsWithMeasurements.OrderBy(p => p.Item1.Name).ToList();
+            
+            return new RazorHxResult<Plants>(new { PlantsList = plantsWithMeasurements });
         });
 
-        hubGroup.MapGet("/register", () => new RazorHxResult<RegisterHub>());
+        hubGroup.MapGet("/add", () => new RazorHxResult<AddPlant>());
 
         return builder;
     }

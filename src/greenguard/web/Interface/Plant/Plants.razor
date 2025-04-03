@@ -1,0 +1,45 @@
+@using web.Interface.Layouts
+@using web.Interface.Components
+@using web.Store
+@layout MainLayout
+
+<div class="padding page right active">
+    <h4>Plants</h4>
+
+    <div id="plant-list" class="grid"
+         hx-get="/plants"
+         hx-trigger="plant-added from:body"
+         hx-select="#plant-list"
+         hx-target="#plant-list"
+         hx-swap="outerHTML">
+        @foreach (var plant in PlantsList)
+        {
+            <PlantCard Plant="plant.Item1" PlantMeasurement="plant.Item2"/>
+        }
+    </div>
+</div>
+
+<div class="fixed bottom right margin m l">
+    <button class="square round extra no-margin"
+            hx-get="/plants/add"
+            hx-target="#add-plant"
+            hx-on::after-request="ui('#add-plant')">
+        <i>add</i>
+    </button>
+</div>
+
+<div class="fixed top right margin s">
+    <button class="square round small-margin"
+            hx-get="/plants/add"
+            hx-target="#add-plant"
+            hx-on::after-request="ui('#add-plant')">
+        <i>add</i>
+    </button>
+</div>
+
+<dialog id="add-plant" class="modal responsive">
+</dialog>
+
+@code {
+    [Parameter] public IReadOnlyList<(Plant, PlantMeasurement?)> PlantsList { get; set; } = [];
+}

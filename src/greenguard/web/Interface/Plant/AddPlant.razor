@@ -1,0 +1,46 @@
+﻿@using web.Services
+<h5>Add plant</h5>
+<form hx-post="/api/plants" hx-on:plant-added="ui('#add-plant')">
+    <div>
+        <div class="tabs">
+            <a class="active" data-ui="#manually-tab">
+                <i>shower</i>
+                <span>Manually</span>
+            </a>
+            <a data-ui="#sensor-tab">
+                <i>sensors</i>
+                <span>Sensor</span>
+            </a>
+        </div>
+        <div id="manually-tab" class="page vertical-padding active">
+            <div class="s12 grid vertical-padding">
+                <div class="s12">
+                    <div class="s12 field label border no-margin">
+                        <input type="text" name="manuallyName" value="@_plantName">
+                        <label>Name</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sensor-tab" class="page vertical-padding">
+            <div class="s12 grid vertical-padding">
+                <nav class="s12 right-align">
+                    <button class="fill" type="button">Scan</button>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <nav class="right-align">
+        <button class="" type="submit">Add</button>
+        <button class="fill" type="button" data-ui="#add-plant">Close</button>
+    </nav>
+</form>
+
+@code {
+    private string _plantName = string.Empty;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _plantName = NameGenerator.GenerateName();
+    }
+}

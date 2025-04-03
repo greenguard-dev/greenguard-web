@@ -10,16 +10,6 @@ public static class DefaultEndpoints
     {
         builder.MapGet("/", () => new RazorHxResult<Home>()).RequireAuthorization();
         builder.MapGet("/settings", () => new RazorHxResult<Settings>()).RequireAuthorization();
-        builder.MapPost("/upload", async (HttpContext context) =>
-        {
-            if (context.Request.HasFormContentType)
-            {
-                var form = await context.Request.ReadFormAsync();
-                var files = form.Files;
-            }
-
-            return Results.Ok();
-        }).DisableAntiforgery().RequireAuthorization();
 
         return builder;
     }

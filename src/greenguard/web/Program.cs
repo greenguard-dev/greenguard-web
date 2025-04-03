@@ -10,6 +10,7 @@ using web.Endpoints.Hub;
 using web.Endpoints.Plant;
 using web.Services.Authentication;
 using web.Services.Hub;
+using web.Services.Plant;
 using web.Services.Version;
 using web.Store;
 
@@ -39,6 +40,7 @@ builder.Services.AddSingleton<IVersionInfo>(new VersionInfo
     { Version = ThisAssembly.AssemblyFileVersion, InformationalVersion = ThisAssembly.AssemblyInformationalVersion });
 builder.Services.AddScoped<IHubService, HubService>();
 builder.Services.AddHttpClient<IHubClient, HubClient>();
+builder.Services.AddScoped<IPlantService, PlantService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
