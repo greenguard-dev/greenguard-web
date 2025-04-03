@@ -7,7 +7,7 @@
                 <form hx-post="/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
                     <button class="square round extra fill">
                         <i>add_photo_alternate</i>
-                        <input name="photo" type="file">
+                        <input name="photo" type="file" accept="image/png, image/jpeg">
                     </button>
                 </form>
             }
@@ -53,10 +53,10 @@
     <div class="center-align middle-align small-height">
         @if (string.IsNullOrEmpty(Plant.ImageUrl))
         {
-            <form hx-post="/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+            <form hx-post="/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
                 <button class="square round extra fill">
                     <i>add_photo_alternate</i>
-                    <input name="photo" type="file">
+                    <input name="photo" type="file" accept="image/png, image/jpeg">
                 </button>
             </form>
         }
