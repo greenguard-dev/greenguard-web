@@ -1,9 +1,9 @@
 ﻿@using web.Services.Hub
 
-<ul id="plant-sensors" class="list border s12">
+<ul id="plant-sensors" class="s12 list border no-space">
     @foreach (var device in Devices)
     {
-        <li class="no-padding">
+        <li>
             <label class="checkbox">
                 <input type="checkbox" name="@device.Address-@device.Name">
                 <span>@device.Name (@device.Address)</span>
@@ -13,9 +13,12 @@
 </ul>
 
 <nav class="s12 right-align">
+    <progress id="scan-progress" class="circle small htmx-indicator"></progress>
     <button hx-get="/plants/scan"
             hx-select="#plant-sensors"
             hx-target="#plant-sensors"
+            hx-swap="outerHTML"
+            hx-indicator="#scan-progress"
             class="fill"
             type="button">Scan
     </button>
