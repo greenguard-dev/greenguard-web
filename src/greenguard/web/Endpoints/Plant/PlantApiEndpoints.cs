@@ -2,6 +2,7 @@
 using web.Endpoints.Plant.Requests;
 using web.Services.Hub;
 using web.Services.Plant;
+using HttpContext = Microsoft.AspNetCore.Http.HttpContext;
 
 namespace web.Endpoints.Plant;
 
@@ -17,10 +18,29 @@ public static class PlantApiEndpoints
             return Results.Ok();
         });
 
-        hubGroup.MapPost("/",
+        hubGroup.MapPost("/manually",
             async ([FromForm] AddPlantRequest addPlantRequest, IPlantService plantService, HttpContext context) =>
             {
                 await plantService.AddPlantAsync(Guid.NewGuid(), addPlantRequest.ManuallyName);
+                context.Response.Headers["HX-Trigger"] = "plant-added";
+                return Results.Ok();
+            }).DisableAntiforgery();
+
+        hubGroup.MapPost("/sensor",
+            async (IPlantService plantService, HttpContext context) =>
+            {
+                var form = await context.Request.ReadFormAsync();
+
+                foreach (var formKey in form.Keys)
+                {
+                    var split = formKey.Split('-');
+                    if (split.Length != 2) continue;
+
+                    var address = split[0];
+                    var name = split[1];
+                    await plantService.AddPlantSensorAsync(Guid.NewGuid(), name, address);
+                }
+
                 context.Response.Headers["HX-Trigger"] = "plant-added";
                 return Results.Ok();
             }).DisableAntiforgery();
@@ -66,7 +86,7 @@ public static class PlantApiEndpoints
                 plant.ImageUrl = $"/plants/{id}.png";
             else if (isJpg)
                 plant.ImageUrl = $"/plants/{id}.jpg";
-            
+
             await plantService.UpdatePlantAsync(plant);
 
             context.Response.Headers["HX-Trigger"] = "plant-added";

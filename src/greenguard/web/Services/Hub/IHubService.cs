@@ -9,5 +9,6 @@ public interface IHubService
     Task RegisterHubAsync(Guid id, string? name, DeviceId deviceId);
     Task DeleteHubAsync(Guid id);
     Task HealthCheckAsync(Guid id, string? hubIpAddress);
-    Task ScanForDevicesAsync(Guid id);
+    IAsyncEnumerable<HubClient.Device> ScanForDevicesAsync(Guid id);
+    IAsyncEnumerable<HubClient.Device> ScanForDevicesAsync();
 }

@@ -1,0 +1,26 @@
+﻿@using web.Services.Hub
+
+<ul id="plant-sensors" class="list border s12">
+    @foreach (var device in Devices)
+    {
+        <li class="no-padding">
+            <label class="checkbox">
+                <input type="checkbox" name="@device.Address-@device.Name">
+                <span>@device.Name (@device.Address)</span>
+            </label>
+        </li>
+    }
+</ul>
+
+<nav class="s12 right-align">
+    <button hx-get="/plants/scan"
+            hx-select="#plant-sensors"
+            hx-target="#plant-sensors"
+            class="fill"
+            type="button">Scan
+    </button>
+</nav>
+
+@code {
+    [Parameter] public List<HubClient.Device> Devices { get; set; } = [];
+}

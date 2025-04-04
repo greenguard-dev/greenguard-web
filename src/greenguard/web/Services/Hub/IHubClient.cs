@@ -2,5 +2,5 @@
 
 public interface IHubClient
 {
-    Task ScanForDevicesAsync(Store.Hub hub);
+    IAsyncEnumerable<HubClient.Device> ScanForDevicesAsync(Store.Hub hub);
 }

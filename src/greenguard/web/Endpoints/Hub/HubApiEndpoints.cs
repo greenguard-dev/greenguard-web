@@ -40,8 +40,28 @@ public static class HubApiEndpoints
 
         hubGroup.MapGet("/{id:guid}/scan", async (Guid id, IHubService hubService) =>
         {
-            await hubService.ScanForDevicesAsync(id);
-            return Results.Ok();
+            var devices = hubService.ScanForDevicesAsync(id);
+            var deviceList = new List<HubClient.Device>();
+
+            await foreach (var device in devices)
+            {
+                deviceList.Add(device);
+            }
+
+            return Results.Ok(deviceList);
+        });
+
+        hubGroup.MapGet("/scan", async (IHubService hubService) =>
+        {
+            var devices = hubService.ScanForDevicesAsync();
+            var deviceList = new List<HubClient.Device>();
+
+            await foreach (var device in devices)
+            {
+                deviceList.Add(device);
+            }
+
+            return Results.Ok(deviceList);
         });
 
         hubGroup.MapGet("/{id:guid}/health", async (Guid id, IHubService hubService, HttpContext context) =>

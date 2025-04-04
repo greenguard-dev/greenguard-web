@@ -65,7 +65,7 @@ public class HubService : IHubService
         await _documentSession.SaveChangesAsync();
     }
 
-    public async Task ScanForDevicesAsync(Guid id)
+    public async IAsyncEnumerable<HubClient.Device> ScanForDevicesAsync(Guid id)
     {
         var hub = await _documentSession.LoadAsync<Store.Hub>(id);
 
@@ -74,6 +74,23 @@ public class HubService : IHubService
             throw new InvalidOperationException("Hub not found");
         }
 
-        await _hubClient.ScanForDevicesAsync(hub);
+        var devices = _hubClient.ScanForDevicesAsync(hub);
+        await foreach (var device in devices)
+        {
+            yield return device;
+        }
+    }
+
+    public async IAsyncEnumerable<HubClient.Device> ScanForDevicesAsync()
+    {
+        var hubs = _documentSession.Query<Store.Hub>().ToList();
+
+        foreach (var devices in hubs.Select(hub => _hubClient.ScanForDevicesAsync(hub)))
+        {
+            await foreach (var device in devices)
+            {
+                yield return device;
+            }
+        }
     }
 }

@@ -33,6 +33,18 @@ public class PlantService : IPlantService
         return _documentSession.SaveChangesAsync();
     }
 
+    public Task AddPlantSensorAsync(Guid id, string name, string address)
+    {
+        var plant = new Store.Plant
+        {
+            Id = id,
+            Name = name
+        };
+
+        _documentSession.Store(plant);
+        return _documentSession.SaveChangesAsync();
+    }
+
     public Task UpdatePlantAsync(Store.Plant plant)
     {
         _documentSession.Update(plant);

@@ -9,7 +9,7 @@ public class HubClient : IHubClient
         _httpClient = httpClient;
     }
 
-    public async Task ScanForDevicesAsync(Store.Hub hub)
+    public async IAsyncEnumerable<Device> ScanForDevicesAsync(Store.Hub hub)
     {
         var ipAddress = hub.IpAddress ?? throw new InvalidOperationException("Hub IpAddress is not set");
 
@@ -29,6 +29,11 @@ public class HubClient : IHubClient
         if (content == null)
         {
             throw new InvalidOperationException("Failed to deserialize scan response");
+        }
+        
+        foreach (var device in content)
+        {
+            yield return device;
         }
     }
 

@@ -4,6 +4,7 @@ using web.Interface;
 using web.Interface.Hub;
 using web.Interface.Plant;
 using web.Services;
+using web.Services.Hub;
 using web.Services.Plant;
 using web.Store;
 
@@ -57,14 +58,25 @@ public static class PlantEndpoints
                 var measurement = plantMeasurements.FirstOrDefault(m => m.PlantId == plant.Id);
                 plantsWithMeasurements.Add(measurement != null ? (plant, measurement) : (plant, null));
             }
-
-            // Sort the plants by name
+            
             plantsWithMeasurements = plantsWithMeasurements.OrderBy(p => p.Item1.Name).ToList();
             
             return new RazorHxResult<Plants>(new { PlantsList = plantsWithMeasurements });
         });
 
         hubGroup.MapGet("/add", () => new RazorHxResult<AddPlant>());
+        hubGroup.MapGet("/scan", async (IHubService hubService) =>
+        {
+            var devices = hubService.ScanForDevicesAsync();
+            var deviceList = new List<HubClient.Device>();
+
+            await foreach (var device in devices)
+            {
+                deviceList.Add(device);
+            }
+            
+            return new RazorHxResult<PlantSensorScanner>(new { Devices = deviceList });
+        });
 
         return builder;
     }
