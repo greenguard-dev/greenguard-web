@@ -4,7 +4,7 @@
         <div class="center-align middle-align small-width small-height">
             @if (string.IsNullOrEmpty(Plant.ImageUrl))
             {
-                <form hx-post="/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+                <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
                     <button class="square round extra fill">
                         <i>add_photo_alternate</i>
                         <input name="photo" type="file" accept="image/png, image/jpeg">
@@ -14,6 +14,14 @@
             else
             {
                 <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name"/>
+                <div class="absolute right top l m small-padding">
+                    <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+                        <button class="small secondary square round no-margin">
+                            <i class="small">photo_camera</i>
+                            <input name="photo" type="file" accept="image/png, image/jpeg">
+                        </button>
+                    </form>
+                </div>
             }
         </div>
         <div class="large-padding max row top-align">
@@ -53,7 +61,7 @@
     <div class="center-align middle-align small-height">
         @if (string.IsNullOrEmpty(Plant.ImageUrl))
         {
-            <form hx-post="/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
+            <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
                 <button class="square round extra fill">
                     <i>add_photo_alternate</i>
                     <input name="photo" type="file" accept="image/png, image/jpeg">
@@ -63,6 +71,14 @@
         else
         {
             <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name"/>
+            <div class="absolute right top s small-padding">
+                <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data" class="no-padding">
+                    <button class="small secondary square round no-margin">
+                        <i class="small">photo_camera</i>
+                        <input name="photo" type="file" accept="image/png, image/jpeg">
+                    </button>
+                </form>
+            </div>
         }
     </div>
     <div class="large-padding max">

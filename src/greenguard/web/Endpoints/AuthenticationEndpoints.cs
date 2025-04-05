@@ -23,86 +23,89 @@ public static class AuthenticationEndpoints
 
     public static IEndpointRouteBuilder MapAuthenticaton(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/login", Auth<Login>);
-        builder.MapGet("/register", Auth<Register>);
+        builder.MapGet("/login", Auth<Login>).ExcludeFromDescription();
+        builder.MapGet("/register", Auth<Register>).ExcludeFromDescription();
 
         builder.MapPost("/login",
-            async (HttpContext context, UserManagementService userManagementService) =>
-            {
-                if (context.User.Identity is { IsAuthenticated: true })
+                async (HttpContext context, UserManagementService userManagementService) =>
                 {
+                    if (context.User.Identity is { IsAuthenticated: true })
+                    {
+                        context.Response.Headers.Append("HX-Redirect", "/");
+                        return Results.Ok();
+                    }
+
+                    var form = context.Request.Form;
+                    var username = form["username"];
+                    var password = form["password"];
+
+                    var user = await userManagementService.Exists(username);
+
+                    if (user == null)
+                        return Results.Unauthorized();
+
+                    var passwordMatch = UserManagementService.PasswordMatch(password, user.PasswordHash);
+
+                    if (!passwordMatch)
+                        return Results.Unauthorized();
+
+                    var claims = new List<Claim>
+                    {
+                        new(ClaimTypes.Name, user.Username),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authProperties = new AuthenticationProperties();
+
+                    await context.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity), authProperties);
+
                     context.Response.Headers.Append("HX-Redirect", "/");
                     return Results.Ok();
-                }
-
-                var form = context.Request.Form;
-                var username = form["username"];
-                var password = form["password"];
-
-                var user = await userManagementService.Exists(username);
-
-                if (user == null)
-                    return Results.Unauthorized();
-
-                var passwordMatch = UserManagementService.PasswordMatch(password, user.PasswordHash);
-
-                if (!passwordMatch)
-                    return Results.Unauthorized();
-
-                var claims = new List<Claim>
-                {
-                    new(ClaimTypes.Name, user.Username),
-                };
-
-                var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties();
-
-                await context.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity), authProperties);
-
-                context.Response.Headers.Append("HX-Redirect", "/");
-                return Results.Ok();
-            }).DisableAntiforgery();
+                }).ExcludeFromDescription()
+            .DisableAntiforgery();
 
         builder.MapPost("/register",
-            async (HttpContext context, UserManagementService userManagementService) =>
-            {
-                if (context.User.Identity is { IsAuthenticated: true })
+                async (HttpContext context, UserManagementService userManagementService) =>
                 {
+                    if (context.User.Identity is { IsAuthenticated: true })
+                    {
+                        context.Response.Headers.Append("HX-Redirect", "/");
+                        return Results.Ok();
+                    }
+
+                    var form = context.Request.Form;
+                    var username = form["username"];
+                    var password = form["password"];
+                    var repeat = form["repeat"];
+
+                    if (password != repeat)
+                        return Results.BadRequest();
+
+                    var user = await userManagementService.Exists(username);
+
+                    if (user != null)
+                        return Results.BadRequest();
+
+                    _ = await userManagementService.Create(username, password);
+
                     context.Response.Headers.Append("HX-Redirect", "/");
+
                     return Results.Ok();
-                }
-
-                var form = context.Request.Form;
-                var username = form["username"];
-                var password = form["password"];
-                var repeat = form["repeat"];
-
-                if (password != repeat)
-                    return Results.BadRequest();
-
-                var user = await userManagementService.Exists(username);
-
-                if (user != null)
-                    return Results.BadRequest();
-
-                _ = await userManagementService.Create(username, password);
-
-                context.Response.Headers.Append("HX-Redirect", "/");
-
-                return Results.Ok();
-            }).DisableAntiforgery();
+                }).ExcludeFromDescription()
+            .DisableAntiforgery();
 
         builder.MapGet("/logout", async (HttpContext context) =>
-        {
-            await context.SignOutAsync();
-            
-            context.Response.Headers.Append("HX-Redirect", "/");
-            return Results.Ok();
-        }).RequireAuthorization();
+            {
+                await context.SignOutAsync();
+
+                context.Response.Headers.Append("HX-Redirect", "/");
+                return Results.Ok();
+            }).ExcludeFromDescription()
+            .RequireAuthorization();
 
         return builder;
     }

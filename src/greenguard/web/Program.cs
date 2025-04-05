@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using RazorHx.Builder;
 using RazorHx.DependencyInjection;
 using RazorHx.Htmx.HttpContextFeatures;
+using Scalar.AspNetCore;
 using Weasel.Core;
 using web.Endpoints;
 using web.Endpoints.Hub;
@@ -18,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorHxComponents(options => { options.RootComponent = typeof(web.Interface.Index); });
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi("greenguard API");
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddNpgsqlDataSource(builder.Configuration.GetConnectionString("Marten")!);
@@ -81,6 +83,10 @@ app.UseForwardedHeaders();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.AddDocument("greenguard API", "greenguard API");
+    });
 }
 
 app.UseStaticFiles();

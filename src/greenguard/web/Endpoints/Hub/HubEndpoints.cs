@@ -8,8 +8,9 @@ public static class HubEndpoints
 {
     public static IEndpointRouteBuilder MapHubEndpoints(this IEndpointRouteBuilder builder)
     {
-        var hubGroup = builder.MapGroup("hubs");
-        hubGroup.RequireAuthorization();
+        var hubGroup = builder.MapGroup("hubs")
+            .ExcludeFromDescription()
+            .RequireAuthorization();;
 
         hubGroup.MapGet("/", async (IDocumentSession documentSession) =>
         {

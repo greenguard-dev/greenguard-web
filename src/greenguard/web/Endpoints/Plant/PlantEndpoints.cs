@@ -1,9 +1,5 @@
-﻿using Marten;
-using RazorHx.Results;
-using web.Interface;
-using web.Interface.Hub;
+﻿using RazorHx.Results;
 using web.Interface.Plant;
-using web.Services;
 using web.Services.Hub;
 using web.Services.Plant;
 using web.Store;
@@ -14,8 +10,9 @@ public static class PlantEndpoints
 {
     public static IEndpointRouteBuilder MapPlantEndpoints(this IEndpointRouteBuilder builder)
     {
-        var hubGroup = builder.MapGroup("plants");
-        hubGroup.RequireAuthorization();
+        var hubGroup = builder.MapGroup("plants")
+            .ExcludeFromDescription()
+            .RequireAuthorization();
 
         hubGroup.MapGet("/", async (IPlantService plantService) =>
         {
@@ -58,9 +55,9 @@ public static class PlantEndpoints
                 var measurement = plantMeasurements.FirstOrDefault(m => m.PlantId == plant.Id);
                 plantsWithMeasurements.Add(measurement != null ? (plant, measurement) : (plant, null));
             }
-            
+
             plantsWithMeasurements = plantsWithMeasurements.OrderBy(p => p.Item1.Name).ToList();
-            
+
             return new RazorHxResult<Plants>(new { PlantsList = plantsWithMeasurements });
         });
 
@@ -74,7 +71,7 @@ public static class PlantEndpoints
             {
                 deviceList.Add(device);
             }
-            
+
             return new RazorHxResult<PlantSensorScanner>(new { Devices = deviceList });
         });
 

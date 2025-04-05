@@ -8,8 +8,13 @@ public static class DefaultEndpoints
 {
     public static IEndpointRouteBuilder MapDefault(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/", () => new RazorHxResult<Home>()).RequireAuthorization();
-        builder.MapGet("/settings", () => new RazorHxResult<Settings>()).RequireAuthorization();
+        builder.MapGet("/", () => new RazorHxResult<Home>())
+            .ExcludeFromDescription()
+            .RequireAuthorization();
+        
+        builder.MapGet("/settings", () => new RazorHxResult<Settings>())
+            .ExcludeFromDescription()
+            .RequireAuthorization();
 
         return builder;
     }
