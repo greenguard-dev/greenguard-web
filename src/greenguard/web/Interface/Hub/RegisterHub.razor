@@ -1,5 +1,6 @@
 ﻿@using web.Services
-<h5>Register Hub</h5>
+
+<h6 class="bottom-padding">Register Hub</h6>
 <form hx-post="/api/hubs" hx-on:hub-added="ui('#add-hub')">
     <div>
         <div class="tabs">
@@ -12,8 +13,8 @@
                 <span>Firmware</span>
             </a>
         </div>
-        <div id="device-tab" class="page vertical-padding active">
-            <div class="s12 grid vertical-padding">
+        <div id="device-tab" class="page top-padding active">
+            <div class="s12 grid top-padding">
                 <div class="s12">
                     <div class="s12 field label border no-margin">
                         <input type="text" name="name" value="@_plantName">
@@ -31,8 +32,8 @@
                 </div>
             </div>
         </div>
-        <div id="firmware-tab" class="page vertical-padding">
-            <div class="s12 grid vertical-padding">
+        <div id="firmware-tab" class="page top-padding">
+            <div class="s12 grid top-padding">
                 <div class="s12">
                     <div class="field label border no-margin">
                         <input type="text" name="endpoint" value="@_currentAddress">
@@ -67,11 +68,11 @@
 
 @code {
     [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
-    
+
     private string? _currentAddress = null;
     private string _plantName = string.Empty;
-    
-        
+
+
     protected override async Task OnInitializedAsync()
     {
         _plantName = NameGenerator.GenerateName();
@@ -89,4 +90,5 @@
             _currentAddress = "http://" + HttpContextAccessor.HttpContext.Request.Host;
         }
     }
+
 }
