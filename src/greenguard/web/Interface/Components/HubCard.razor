@@ -4,8 +4,9 @@
         <div class="row">
             <h6>@Hub.Name</h6>
             <div class="max"></div>
-            @if(Hub.IsOnline)
+            @if (Hub.IsOnline)
             {
+                <p class="small-text">@LastHealthCheckFromNow</p>
                 <i>podcasts</i>
             }
             else
@@ -28,4 +29,9 @@
 
 @code {
     [Parameter, EditorRequired] public required Hub Hub { get; set; }
+
+    private string LastHealthCheckFromNow => !Hub.LastHealthCheck.HasValue
+        ? string.Empty
+        : $"{Math.Floor((DateTime.UtcNow - Hub.LastHealthCheck.Value).TotalSeconds)} seconds ago";
+
 }
