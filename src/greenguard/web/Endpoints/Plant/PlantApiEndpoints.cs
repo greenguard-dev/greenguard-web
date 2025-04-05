@@ -54,14 +54,24 @@ public static class PlantApiEndpoints
                 {
                     if (!context.Request.HasFormContentType) return Results.NoContent();
                     if (image.Length == 0) return Results.NoContent();
-                    
+
                     var plant = await plantService.GetPlantAsync(id);
                     if (plant is null) return Results.NotFound();
-                    
-                    await ImageResizer.CreateThumbnailAsync(image, 300, 300,
-                        Path.Combine("wwwroot", "thumbnails"), $"{id}.webp");
 
-                    plant.ImageUrl = $"/thumbnails/{id}.webp";
+                    var folder = Path.Combine("wwwroot", "thumbnails");
+                    var fileName = $"{id}-{DateTime.UtcNow.Ticks}.webp";
+
+                    if (Directory.Exists(folder) == false)
+                        Directory.CreateDirectory(folder);
+
+                    foreach (var file in Directory.EnumerateFiles(folder, $"{id}-*.webp"))
+                    {
+                        File.Delete(file);
+                    }
+
+                    await ImageResizer.CreateThumbnailAsync(image, 450, 450, folder, fileName);
+
+                    plant.ImageUrl = $"/thumbnails/{fileName}";
 
                     await plantService.UpdatePlantAsync(plant);
 
