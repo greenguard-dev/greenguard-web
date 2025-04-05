@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using web.Endpoints.Plant.Requests;
 using web.Services.Hub;
+using web.Services.Image;
 using web.Services.Plant;
 using HttpContext = Microsoft.AspNetCore.Http.HttpContext;
 
@@ -48,54 +49,26 @@ public static class PlantApiEndpoints
                 }).WithName("AddPlantSensor")
             .DisableAntiforgery();
 
-        plantGroup.MapPost("/{id:guid}/upload", async (Guid id, HttpContext context, IPlantService plantService) =>
-            {
-                if (!context.Request.HasFormContentType) return Results.NoContent();
-
-                var form = await context.Request.ReadFormAsync();
-                var files = form.Files;
-
-                if (files.Count == 0) return Results.NoContent();
-
-                var file = files[0];
-                var isPng = file.ContentType == "image/png";
-                var isJpg = file.ContentType == "image/jpeg";
-
-                if (!isPng && !isJpg) return Results.NoContent();
-
-                var filePath = Path.Combine("wwwroot", "plants");
-
-                if (isPng)
-                    filePath = Path.Combine(filePath, $"{id}.png");
-                else if (isJpg)
-                    filePath = Path.Combine(filePath, $"{id}.jpg");
-
-                var directoryPath = Path.GetDirectoryName(filePath);
-
-                if (directoryPath is not null && !Directory.Exists(directoryPath))
+        plantGroup.MapPost("/{id:guid}/upload",
+                async (Guid id, IFormFile image, HttpContext context, IPlantService plantService) =>
                 {
-                    Directory.CreateDirectory(directoryPath);
-                }
+                    if (!context.Request.HasFormContentType) return Results.NoContent();
+                    if (image.Length == 0) return Results.NoContent();
+                    
+                    var plant = await plantService.GetPlantAsync(id);
+                    if (plant is null) return Results.NotFound();
+                    
+                    await ImageResizer.CreateThumbnailAsync(image, 300, 300,
+                        Path.Combine("wwwroot", "thumbnails"), $"{id}.webp");
 
-                await using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
+                    plant.ImageUrl = $"/thumbnail/{id}.webp";
 
-                var plant = await plantService.GetPlantAsync(id);
-                if (plant is null) return Results.NotFound();
+                    await plantService.UpdatePlantAsync(plant);
 
-                if (isPng)
-                    plant.ImageUrl = $"/plants/{id}.png";
-                else if (isJpg)
-                    plant.ImageUrl = $"/plants/{id}.jpg";
+                    context.Response.Headers["HX-Trigger"] = "plant-added";
 
-                await plantService.UpdatePlantAsync(plant);
-
-                context.Response.Headers["HX-Trigger"] = "plant-added";
-
-                return Results.NoContent();
-            }).WithName("UploadPlantImage")
+                    return Results.NoContent();
+                }).WithName("UploadPlantImage")
             .DisableAntiforgery();
 
         return builder;
