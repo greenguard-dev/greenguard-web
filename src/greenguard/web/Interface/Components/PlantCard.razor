@@ -13,7 +13,7 @@
             }
             else
             {
-                <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name"/>
+                <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name" data-ui="#plant-@Plant.Id" />
                 <div class="absolute right top l m small-padding">
                     <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
                         <button class="small secondary square round no-margin">
@@ -70,7 +70,7 @@
         }
         else
         {
-            <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name"/>
+            <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name" data-ui="#plant-@Plant.Id" />
             <div class="absolute right top s small-padding">
                 <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data" class="no-padding">
                     <button class="small secondary square round no-margin">
@@ -111,6 +111,10 @@
         }
     </div>
 </article>
+
+<dialog id="plant-@Plant.Id" class="no-padding">
+    <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name"/>
+</dialog>
 
 @code {
     [Parameter, EditorRequired] public required Plant Plant { get; set; }

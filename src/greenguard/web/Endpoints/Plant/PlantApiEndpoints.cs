@@ -69,7 +69,7 @@ public static class PlantApiEndpoints
                         File.Delete(file);
                     }
 
-                    await ImageResizer.CreateThumbnailAsync(image, 450, 450, folder, fileName);
+                    await ImageResizer.CreateThumbnailAsync(image, 500, 500, folder, fileName);
 
                     plant.ImageUrl = $"/thumbnails/{fileName}";
 
