@@ -74,6 +74,16 @@ public class HubService : IHubService
             throw new InvalidOperationException("Hub not found");
         }
 
+        if (hub.IpAddress == null)
+        {
+            throw new InvalidOperationException("Hub IpAddress is not set");
+        }
+
+        if (!hub.IsOnline)
+        {
+            throw new InvalidOperationException("Hub is offline");
+        }
+
         var devices = _hubClient.ScanForDevicesAsync(hub);
         await foreach (var device in devices)
         {
@@ -85,8 +95,20 @@ public class HubService : IHubService
     {
         var hubs = _documentSession.Query<Store.Hub>().ToList();
 
-        foreach (var devices in hubs.Select(hub => _hubClient.ScanForDevicesAsync(hub)))
+        foreach (var hub in hubs)
         {
+            if (hub.IpAddress == null)
+            {
+                throw new InvalidOperationException("Hub IpAddress is not set");
+            }
+
+            if (!hub.IsOnline)
+            {
+                throw new InvalidOperationException("Hub is offline");
+            }
+
+            var devices = _hubClient.ScanForDevicesAsync(hub);
+
             await foreach (var device in devices)
             {
                 yield return device;

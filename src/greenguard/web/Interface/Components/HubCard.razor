@@ -4,7 +4,7 @@
         <div class="row">
             <h6>@Hub.Name</h6>
             <div class="max"></div>
-            @if(Hub.LastHealthCheck != null && Hub.LastHealthCheck > DateTime.UtcNow.AddSeconds(-30))
+            @if(Hub.IsOnline)
             {
                 <i>podcasts</i>
             }
