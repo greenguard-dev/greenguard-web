@@ -61,7 +61,7 @@ public static class PlantApiEndpoints
                     await ImageResizer.CreateThumbnailAsync(image, 300, 300,
                         Path.Combine("wwwroot", "thumbnails"), $"{id}.webp");
 
-                    plant.ImageUrl = $"/thumbnail/{id}.webp";
+                    plant.ImageUrl = $"/thumbnails/{id}.webp";
 
                     await plantService.UpdatePlantAsync(plant);
 
