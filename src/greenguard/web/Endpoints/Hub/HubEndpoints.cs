@@ -18,7 +18,7 @@ public static class HubEndpoints
             return new RazorHxResult<Hubs>(new { HubList = hubs });
         });
 
-        hubGroup.MapGet("/register", () => new RazorHxResult<RegisterHub>());
+        hubGroup.MapGet("/add", () => new RazorHxResult<AddHub>());
 
         return builder;
     }

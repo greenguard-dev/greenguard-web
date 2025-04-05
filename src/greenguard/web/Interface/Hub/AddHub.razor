@@ -1,8 +1,8 @@
 ﻿@using web.Services
 
-<h6 class="bottom-padding">Register Hub</h6>
-<form hx-post="/api/hubs" hx-on:hub-added="ui('#add-hub')">
-    <div>
+<h6 class="bottom-padding">Add Hub</h6>
+<div>
+    <form hx-post="/api/hubs" hx-on:hub-added="ui('#add-hub')">
         <div class="tabs">
             <a class="active" data-ui="#device-tab">
                 <i>settings_remote</i>
@@ -59,12 +59,12 @@
                 </nav>
             </div>
         </div>
-    </div>
-    <nav class="right-align">
-        <button class="" type="submit">Register</button>
-        <button class="fill" type="button" data-ui="#add-hub">Close</button>
-    </nav>
-</form>
+        <nav class="right-align">
+            <button class="" type="submit">Add</button>
+            <button class="fill" type="button" data-ui="#add-hub">Close</button>
+        </nav>
+    </form>
+</div>
 
 @code {
     [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
