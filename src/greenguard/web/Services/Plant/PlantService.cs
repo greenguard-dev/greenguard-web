@@ -1,4 +1,5 @@
 ﻿using Marten;
+using web.Store;
 
 namespace web.Services.Plant;
 
@@ -21,24 +22,27 @@ public class PlantService : IPlantService
         return _documentSession.LoadAsync<Store.Plant>(id);
     }
 
-    public Task AddPlantAsync(Guid id, string? name)
+    public Task AddManuelPlantAsync(Guid id, string? name, int wateringInterval, int fertilizingInterval)
     {
-        var plant = new Store.Plant
+        var plant = new ManuelPlant
         {
             Id = id,
-            Name = name
+            Name = name,
+            WateringInterval = wateringInterval,
+            FertilizingInterval = fertilizingInterval
         };
 
         _documentSession.Store(plant);
         return _documentSession.SaveChangesAsync();
     }
 
-    public Task AddPlantSensorAsync(Guid id, string name, string address)
+    public Task AddSensorPlantAsync(Guid id, string name, string address)
     {
-        var plant = new Store.Plant
+        var plant = new SensorPlant
         {
             Id = id,
-            Name = name
+            Name = name,
+            Address = address
         };
 
         _documentSession.Store(plant);
@@ -52,7 +56,7 @@ public class PlantService : IPlantService
     }
 
     public Task DeletePlantAsync(Guid id)
-    {   
+    {
         _documentSession.Delete<Store.Plant>(id);
         return _documentSession.SaveChangesAsync();
     }

@@ -23,7 +23,8 @@ public static class PlantApiEndpoints
         plantGroup.MapPost("/manually",
                 async ([FromForm] AddPlantRequest addPlantRequest, IPlantService plantService, HttpContext context) =>
                 {
-                    await plantService.AddPlantAsync(Guid.NewGuid(), addPlantRequest.ManuallyName);
+                    await plantService.AddManuelPlantAsync(Guid.NewGuid(), addPlantRequest.ManuallyName,
+                        addPlantRequest.WateringInterval, addPlantRequest.FertilizingInterval);
                     context.Response.Headers["HX-Trigger"] = "plant-added";
                     return Results.Ok();
                 }).WithName("AddPlantManually")
@@ -41,7 +42,7 @@ public static class PlantApiEndpoints
 
                         var address = split[0];
                         var name = split[1];
-                        await plantService.AddPlantSensorAsync(Guid.NewGuid(), name, address);
+                        await plantService.AddSensorPlantAsync(Guid.NewGuid(), name, address);
                     }
 
                     context.Response.Headers["HX-Trigger"] = "plant-added";

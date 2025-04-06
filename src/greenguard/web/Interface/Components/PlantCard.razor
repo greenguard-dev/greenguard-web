@@ -13,7 +13,7 @@
             }
             else
             {
-                <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name" data-ui="#plant-@Plant.Id" />
+                <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name" data-ui="#plant-@Plant.Id"/>
                 <div class="absolute right top l m small-padding">
                     <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data">
                         <button class="small secondary square round no-margin">
@@ -40,18 +40,22 @@
                     </button>
                 </div>
             </div>
-            @if (PlantMeasurement != null)
+            @if (_sensorPlant != null && _sensorMeasurement != null)
             {
-                <div class="row">
+                <div class="medium-space"></div>
+                <div class="row" style="height: 10rem">
                     <SensorMeter IconTop="humidity_high" IconBottom="humidity_low"
-                                 Value="@PlantMeasurement.Items["Humidity"]" Max="100" Color="blue-text"/>
+                                 Value="@_sensorMeasurement.Items["Humidity"]"
+                                 Max="100" Color="blue-text"/>
                     <SensorMeter IconTop="brightness_7" IconBottom="brightness_5"
-                                 Value="@PlantMeasurement.Items["Light"]"
+                                 Value="@_sensorMeasurement.Items["Light"]"
                                  Max="100" Color="yellow-text"/>
-                    <SensorMeter IconTop="heat" IconBottom="ac_unit" Value="@PlantMeasurement.Items["Temperature"]"
-                                 Max="100" Color="orange-text"/>
-                    <SensorMeter IconTop="water_do" IconBottom="salinity" Value="@PlantMeasurement.Items["Fertility"]"
-                                 Max="100" Color="green-text"/>
+                    <SensorMeter IconTop="heat" IconBottom="ac_unit" Value="@_sensorMeasurement.Items["Temperature"]"
+                                 Max="100"
+                                 Color="orange-text"/>
+                    <SensorMeter IconTop="water_do" IconBottom="salinity" Value="@_sensorMeasurement.Items["Fertility"]"
+                                 Max="100"
+                                 Color="green-text"/>
                 </div>
             }
         </div>
@@ -70,9 +74,10 @@
         }
         else
         {
-            <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name" data-ui="#plant-@Plant.Id" />
+            <img class="responsive small-round" src="@Plant.ImageUrl" alt="@Plant.Name" data-ui="#plant-@Plant.Id"/>
             <div class="absolute right top s small-padding">
-                <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data" class="no-padding">
+                <form hx-post="/api/plants/@Plant.Id/upload" hx-trigger="change" hx-encoding="multipart/form-data"
+                      class="no-padding">
                     <button class="small secondary square round no-margin">
                         <i class="small">photo_camera</i>
                         <input name="image" type="file" accept="image/png, image/jpeg">
@@ -92,19 +97,19 @@
                 <i>settings</i>
             </button>
         </div>
-        @if (PlantMeasurement != null)
+        @if (_sensorPlant != null && _sensorMeasurement != null)
         {
             <div class="medium-space"></div>
             <div class="row" style="height: 10rem">
                 <SensorMeter IconTop="humidity_high" IconBottom="humidity_low"
-                             Value="@PlantMeasurement.Items["Humidity"]"
+                             Value="@_sensorMeasurement.Items["Humidity"]"
                              Max="100" Color="blue-text"/>
-                <SensorMeter IconTop="brightness_7" IconBottom="brightness_5" Value="@PlantMeasurement.Items["Light"]"
+                <SensorMeter IconTop="brightness_7" IconBottom="brightness_5" Value="@_sensorMeasurement.Items["Light"]"
                              Max="100" Color="yellow-text"/>
-                <SensorMeter IconTop="heat" IconBottom="ac_unit" Value="@PlantMeasurement.Items["Temperature"]"
+                <SensorMeter IconTop="heat" IconBottom="ac_unit" Value="@_sensorMeasurement.Items["Temperature"]"
                              Max="100"
                              Color="orange-text"/>
-                <SensorMeter IconTop="water_do" IconBottom="salinity" Value="@PlantMeasurement.Items["Fertility"]"
+                <SensorMeter IconTop="water_do" IconBottom="salinity" Value="@_sensorMeasurement.Items["Fertility"]"
                              Max="100"
                              Color="green-text"/>
             </div>
@@ -119,4 +124,33 @@
 @code {
     [Parameter, EditorRequired] public required Plant Plant { get; set; }
     [Parameter, EditorRequired] public required PlantMeasurement? PlantMeasurement { get; set; }
+
+    private ManuelPlant? _manuelPlant;
+    private SensorPlant? _sensorPlant;
+    private ManuelMeasurement? _manuelMeasurement;
+    private SensorMeasurement? _sensorMeasurement;
+
+    protected override void OnParametersSet()
+    {
+        switch (Plant)
+        {
+            case SensorPlant sensorPlant:
+                _sensorPlant = sensorPlant;
+                break;
+            case ManuelPlant manuelPlant:
+                _manuelPlant = manuelPlant;
+                break;
+        }
+
+        switch (PlantMeasurement)
+        {
+            case SensorMeasurement sensorMeasurement:
+                _sensorMeasurement = sensorMeasurement;
+                break;
+            case ManuelMeasurement manuelMeasurement:
+                _manuelMeasurement = manuelMeasurement;
+                break;
+        }
+    }
+
 }

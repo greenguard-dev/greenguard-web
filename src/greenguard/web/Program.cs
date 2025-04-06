@@ -25,17 +25,24 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddNpgsqlDataSource(builder.Configuration.GetConnectionString("Marten")!);
 builder.Services.AddMarten(options =>
-{
-    options.UseSystemTextJsonForSerialization();
-
-    options.Schema.For<User>();
-    options.Schema.For<Hub>();
-
-    if (builder.Environment.IsDevelopment())
     {
-        options.AutoCreateSchemaObjects = AutoCreate.All;
-    }
-}).UseLightweightSessions().UseNpgsqlDataSource();
+        options.UseSystemTextJsonForSerialization();
+
+        options.Schema.For<User>();
+        options.Schema.For<Hub>();
+        options.Schema.For<Plant>()
+            .AddSubClass<ManuelPlant>()
+            .AddSubClass<SensorPlant>();
+        options.Schema.For<PlantMeasurement>()
+            .AddSubClass<ManuelMeasurement>()
+            .AddSubClass<SensorMeasurement>();
+
+        if (builder.Environment.IsDevelopment())
+        {
+            options.AutoCreateSchemaObjects = AutoCreate.All;
+        }
+    }).UseLightweightSessions()
+    .UseNpgsqlDataSource();
 
 builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddSingleton<IVersionInfo>(new VersionInfo
@@ -83,10 +90,7 @@ app.UseForwardedHeaders();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.AddDocument("greenguard API", "greenguard API");
-    });
+    app.MapScalarApiReference(options => { options.AddDocument("greenguard API", "greenguard API"); });
 }
 
 app.UseStaticFiles();

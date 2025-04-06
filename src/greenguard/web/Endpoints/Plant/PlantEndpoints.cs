@@ -22,19 +22,7 @@ public static class PlantEndpoints
             var random = new Random();
 
             plantMeasurements.AddRange([
-                new PlantMeasurement
-                {
-                    Id = Guid.NewGuid(),
-                    PlantId = Guid.Empty,
-                    Items = new Dictionary<string, int>
-                    {
-                        { "Humidity", random.Next(0, 100) },
-                        { "Temperature", random.Next(0, 100) },
-                        { "Light", random.Next(0, 100) },
-                        { "Fertility", random.Next(0, 100) },
-                    }
-                },
-                new PlantMeasurement
+                new SensorMeasurement
                 {
                     Id = Guid.NewGuid(),
                     PlantId = Guid.Empty,
