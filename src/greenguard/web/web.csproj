@@ -12,6 +12,8 @@
         <PackageReference Include="Magick.NET-Q8-x64" Version="14.6.0" />
         <PackageReference Include="Marten" Version="7.39.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
+        <PackageReference Include="MQTTnet" Version="5.0.1.1416" />
+        <PackageReference Include="MQTTnet.AspNetCore" Version="5.0.1.1416" />
         <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

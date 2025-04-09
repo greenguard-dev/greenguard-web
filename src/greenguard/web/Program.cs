@@ -1,6 +1,7 @@
 using Marten;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
+using MQTTnet.AspNetCore;
 using RazorHx.Builder;
 using RazorHx.DependencyInjection;
 using RazorHx.Htmx.HttpContextFeatures;
@@ -11,45 +12,23 @@ using web.Endpoints.Hub;
 using web.Endpoints.Plant;
 using web.Services.Authentication;
 using web.Services.Hub;
+using web.Services.Mqtt;
 using web.Services.Plant;
 using web.Services.Version;
 using web.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorHxComponents(options => { options.RootComponent = typeof(web.Interface.Index); });
+builder.WebHost.UseKestrel(so =>
+{
+    so.ListenAnyIP(8080);
+    so.ListenAnyIP(1883, l => l.UseMqtt());
+});
 
-builder.Services.AddOpenApi("greenguard API");
+builder.Services.AddHostedMqttServer(
+    optionsBuilder => { optionsBuilder.WithoutDefaultEndpoint(); });
 
-builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddNpgsqlDataSource(builder.Configuration.GetConnectionString("Marten")!);
-builder.Services.AddMarten(options =>
-    {
-        options.UseSystemTextJsonForSerialization();
-
-        options.Schema.For<User>();
-        options.Schema.For<Hub>();
-        options.Schema.For<Plant>()
-            .AddSubClass<ManuelPlant>()
-            .AddSubClass<SensorPlant>();
-        options.Schema.For<PlantMeasurement>()
-            .AddSubClass<ManuelMeasurement>()
-            .AddSubClass<SensorMeasurement>();
-
-        if (builder.Environment.IsDevelopment())
-        {
-            options.AutoCreateSchemaObjects = AutoCreate.All;
-        }
-    }).UseLightweightSessions()
-    .UseNpgsqlDataSource();
-
-builder.Services.AddScoped<UserManagementService>();
-builder.Services.AddSingleton<IVersionInfo>(new VersionInfo
-    { Version = ThisAssembly.AssemblyFileVersion, InformationalVersion = ThisAssembly.AssemblyInformationalVersion });
-builder.Services.AddScoped<IHubService, HubService>();
-builder.Services.AddHttpClient<IHubClient, HubClient>();
-builder.Services.AddScoped<IPlantService, PlantService>();
+builder.Services.AddMqttConnectionHandler();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -82,6 +61,43 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders =
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
+
+builder.Services.AddOpenApi("greenguard API");
+
+builder.Services.AddRazorHxComponents(options => { options.RootComponent = typeof(web.Interface.Index); });
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddNpgsqlDataSource(builder.Configuration.GetConnectionString("Marten")!);
+
+builder.Services.AddMarten(options =>
+    {
+        options.UseSystemTextJsonForSerialization();
+
+        options.Schema.For<User>();
+        options.Schema.For<Hub>();
+        options.Schema.For<Plant>()
+            .AddSubClass<ManuelPlant>()
+            .AddSubClass<SensorPlant>();
+        options.Schema.For<PlantMeasurement>()
+            .AddSubClass<ManuelMeasurement>()
+            .AddSubClass<SensorMeasurement>();
+
+        if (builder.Environment.IsDevelopment())
+        {
+            options.AutoCreateSchemaObjects = AutoCreate.All;
+        }
+    }).UseLightweightSessions()
+    .UseNpgsqlDataSource();
+
+builder.Services.AddSingleton<IVersionInfo>(new VersionInfo
+    { Version = ThisAssembly.AssemblyFileVersion, InformationalVersion = ThisAssembly.AssemblyInformationalVersion });
+
+builder.Services.AddScoped<UserManagementService>();
+builder.Services.AddScoped<IHubService, HubService>();
+builder.Services.AddHttpClient<IHubClient, HubClient>();
+builder.Services.AddScoped<IPlantService, PlantService>();
+builder.Services.AddHostedService<MqttHubHostedService>();
 
 var app = builder.Build();
 
