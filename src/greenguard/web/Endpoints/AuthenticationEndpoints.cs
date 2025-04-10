@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
 using RazorHx.Results;
 using web.Interface;
+using web.Interface.Components;
 using web.Services.Authentication;
 
 namespace web.Endpoints;
@@ -42,12 +43,24 @@ public static class AuthenticationEndpoints
                     var user = await userManagementService.Exists(username);
 
                     if (user == null)
-                        return Results.Unauthorized();
+                        return new RazorHxResult<Login>(new
+                        {
+                            Username = username.ToString(),
+                        }).WithOutOfBand<ErrorSnackbar>(new
+                        {
+                            Message = "The username or password is incorrect.",
+                        });
 
                     var passwordMatch = UserManagementService.PasswordMatch(password, user.PasswordHash);
 
                     if (!passwordMatch)
-                        return Results.Unauthorized();
+                        return new RazorHxResult<Login>(new
+                        {
+                            Username = username.ToString(),
+                        }).WithOutOfBand<ErrorSnackbar>(new
+                        {
+                            Message = "The username or password is incorrect.",
+                        });
 
                     var claims = new List<Claim>
                     {
@@ -82,13 +95,43 @@ public static class AuthenticationEndpoints
                     var password = form["password"];
                     var repeat = form["repeat"];
 
+                    if (string.IsNullOrWhiteSpace(username))
+                        return new RazorHxResult<Register>(new
+                        {
+                            Username = username.ToString(),
+                        }).WithOutOfBand<ErrorSnackbar>(new
+                        {
+                            Message = "The username is required.",
+                        });
+                    
+                    if (string.IsNullOrWhiteSpace(password))
+                        return new RazorHxResult<Register>(new
+                        {
+                            Username = username.ToString(),
+                        }).WithOutOfBand<ErrorSnackbar>(new
+                        {
+                            Message = "The password is required.",
+                        });
+                    
                     if (password != repeat)
-                        return Results.BadRequest();
+                        return new RazorHxResult<Register>(new
+                        {
+                            Username = username.ToString(),
+                        }).WithOutOfBand<ErrorSnackbar>(new
+                        {
+                            Message = "The passwords do not match.",
+                        });
 
                     var user = await userManagementService.Exists(username);
 
                     if (user != null)
-                        return Results.BadRequest();
+                        return new RazorHxResult<Register>(new
+                        {
+                            Username = username.ToString(),
+                        }).WithOutOfBand<ErrorSnackbar>(new
+                        {
+                            Message = "The username is already taken.",
+                        });
 
                     _ = await userManagementService.Create(username, password);
 

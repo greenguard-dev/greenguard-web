@@ -1,0 +1,17 @@
+﻿<div class="snackbar active error" id="error-snackbar" hx-swap-oob="true" data-id="@Id">
+    <i>error</i>
+    <span>@Message</span>
+
+    <script type="module">
+        setTimeout(() => {
+            const snackbar = document.querySelector(`#error-snackbar[data-id='@Id']`);
+            snackbar.classList.remove('active');
+        }, 5000);
+    </script>
+</div>
+
+@code {
+    [Parameter] public required string Message { get; set; }
+    
+    private string Id { get; set; } = Guid.NewGuid().ToString();
+}
