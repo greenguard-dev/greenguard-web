@@ -2,7 +2,7 @@
 
 <main id="register" class="padding responsive">
     <article class="l m large-padding auto-width absolute center middle">
-        <form hx-post="/register" hx-target="#register" hx-swap="outerHTML" class="grid large-space">
+        <form hx-post="/register" hx-target="#register" hx-swap="outerHTML" hx-indicator="#register-progress" class="grid large-space">
             <div class="l12 m12">
                 <nav>
                     <i class="circle extra">psychiatry</i>
@@ -34,13 +34,16 @@
                 <nav hx-disinherit="*">
                     <a href="/login" class="button border">Login</a>
                     <div class="max"></div>
-                    <button type="submit">Register</button>
+                    <button type="submit">
+                        <progress id="register-progress" class="circle small htmx-indicator"></progress>
+                        Register
+                    </button>
                 </nav>
             </div>
         </form>
     </article>
 
-    <form hx-post="/register" hx-target="#register" hx-swap="outerHTML" class="s grid">
+    <form hx-post="/register" hx-target="#register" hx-swap="outerHTML" hx-indicator="#register-progress" class="s grid">
         <div class="s12">
             <nav>
                 <i class="circle extra">psychiatry</i>
@@ -72,7 +75,10 @@
             <nav hx-disinherit="*">
                 <a href="/login" class="button border">Login</a>
                 <div class="max"></div>
-                <button type="submit">Register</button>
+                <button type="submit">
+                    <progress id="register-progress" class="circle small htmx-indicator"></progress>
+                    Register
+                </button>
             </nav>
         </div>
     </form>
