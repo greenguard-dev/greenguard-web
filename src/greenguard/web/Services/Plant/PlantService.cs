@@ -22,9 +22,9 @@ public class PlantService : IPlantService
         return _documentSession.LoadAsync<Store.Plant>(id);
     }
 
-    public Task AddManuelPlantAsync(Guid id, string? name, int wateringInterval, int fertilizingInterval)
+    public Task AddSensorlessPlantAsync(Guid id, string? name, int? wateringInterval, int? fertilizingInterval)
     {
-        var plant = new ManuelPlant
+        var plant = new SensorlessPlant
         {
             Id = id,
             Name = name,

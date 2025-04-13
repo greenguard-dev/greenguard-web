@@ -25,6 +25,14 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\" />
+      <Folder Include="wwwroot\thumbnails\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="wwwroot\thumbnails\bb7c1e40-dfb2-4b33-9eeb-36c7d14f5fd8-638801551326234400.webp" />
+      <Content Remove="wwwroot\thumbnails\5d5dc437-8eac-491c-8145-21d846a91ecf-638801519676081818.webp" />
+      <Content Remove="wwwroot\thumbnails\37542a28-8ad2-45f3-8407-8f3aa8d67113-638801551372792500.webp" />
+      <Content Remove="wwwroot\thumbnails\1ffb7708-d326-496b-b193-e0991da1a339-638801519927145802.webp" />
     </ItemGroup>
 
 </Project>

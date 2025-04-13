@@ -8,6 +8,7 @@ using RazorHx.Htmx.HttpContextFeatures;
 using Scalar.AspNetCore;
 using Weasel.Core;
 using web.Endpoints;
+using web.Endpoints.Authentication;
 using web.Endpoints.Hub;
 using web.Endpoints.Plant;
 using web.Services.Authentication;
@@ -77,7 +78,7 @@ builder.Services.AddMarten(options =>
         options.Schema.For<User>();
         options.Schema.For<Hub>();
         options.Schema.For<Plant>()
-            .AddSubClass<ManuelPlant>()
+            .AddSubClass<SensorlessPlant>()
             .AddSubClass<SensorPlant>();
         options.Schema.For<PlantMeasurement>()
             .AddSubClass<ManuelMeasurement>()

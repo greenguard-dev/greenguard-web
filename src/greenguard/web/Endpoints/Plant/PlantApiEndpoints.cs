@@ -20,24 +20,30 @@ public static class PlantApiEndpoints
             return Results.Ok();
         }).WithName("GetPlants");
 
-        plantGroup.MapPost("/manually",
-                async ([FromForm] AddPlantRequest addPlantRequest, IPlantService plantService, HttpContext context) =>
+        plantGroup.MapPost("/sensorless",
+                async ([FromForm] AddSensorlessPlantRequest addSensorlessPlantRequest, IPlantService plantService,
+                    HttpContext context) =>
                 {
-                    await plantService.AddManuelPlantAsync(Guid.NewGuid(), addPlantRequest.ManuallyName,
-                        addPlantRequest.WateringInterval, addPlantRequest.FertilizingInterval);
-                    context.Response.Headers["HX-Trigger"] = "plant-added";
+                    var wateringInterval = addSensorlessPlantRequest.WateringInterval;
+                    var fertilizingInterval = addSensorlessPlantRequest.FertilizingInterval;
+                    
+                    int? wateringIntervalValue = string.IsNullOrEmpty(wateringInterval) ? null : int.Parse(wateringInterval);
+                    int? fertilizingIntervalValue = string.IsNullOrEmpty(fertilizingInterval) ? null : int.Parse(fertilizingInterval);
+                    
+                    await plantService.AddSensorlessPlantAsync(Guid.NewGuid(), addSensorlessPlantRequest.Name,
+                        wateringIntervalValue, fertilizingIntervalValue);
+                    context.Response.Headers["HX-Trigger"] = "plants-changed";
                     return Results.Ok();
-                }).WithName("AddPlantManually")
+                }).WithName("AddSensorlessPlant")
             .DisableAntiforgery();
 
         plantGroup.MapPost("/sensor",
-                async (IPlantService plantService, HttpContext context) =>
+                async ([FromForm] AddSensorPlantRequest addSensorPlantRequest, IPlantService plantService,
+                    HttpContext context) =>
                 {
-                    var form = await context.Request.ReadFormAsync();
-
-                    foreach (var formKey in form.Keys)
+                    foreach (var sensor in addSensorPlantRequest.Sensors)
                     {
-                        var split = formKey.Split('-');
+                        var split = sensor.Split('-');
                         if (split.Length != 2) continue;
 
                         var address = split[0];
@@ -45,9 +51,9 @@ public static class PlantApiEndpoints
                         await plantService.AddSensorPlantAsync(Guid.NewGuid(), name, address);
                     }
 
-                    context.Response.Headers["HX-Trigger"] = "plant-added";
+                    context.Response.Headers["HX-Trigger"] = "plants-changed";
                     return Results.Ok();
-                }).WithName("AddPlantSensor")
+                }).WithName("AddSensorPlant")
             .DisableAntiforgery();
 
         plantGroup.MapPost("/{id:guid}/upload",
@@ -76,10 +82,21 @@ public static class PlantApiEndpoints
 
                     await plantService.UpdatePlantAsync(plant);
 
-                    context.Response.Headers["HX-Trigger"] = "plant-added";
+                    context.Response.Headers["HX-Trigger"] = "plants-changed";
 
                     return Results.NoContent();
                 }).WithName("UploadPlantImage")
+            .DisableAntiforgery();
+
+        plantGroup.MapDelete("/{id:guid}",
+                async (Guid id, IPlantService plantService,
+                    HttpContext context) =>
+                {
+                    await plantService.DeletePlantAsync(id);
+                    context.Response.Headers["HX-Trigger"] = "plants-changed";
+
+                    return Results.NoContent();
+                }).WithName("DeletePlant")
             .DisableAntiforgery();
 
         return builder;

@@ -2,24 +2,23 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc;
 using RazorHx.Results;
+using web.Endpoints.Authentication.Requests;
 using web.Interface;
 using web.Interface.Components;
 using web.Services.Authentication;
 
-namespace web.Endpoints;
+namespace web.Endpoints.Authentication;
 
 public static class AuthenticationEndpoints
 {
     private static IResult Auth<T>(HttpContext context) where T : IComponent
     {
-        if (context.User.Identity is { IsAuthenticated: true })
-        {
-            context.Response.Headers.Append("HX-Redirect", "/");
-            return Results.Redirect("/");
-        }
+        if (context.User.Identity is not { IsAuthenticated: true }) return new RazorHxResult<T>();
 
-        return new RazorHxResult<T>();
+        context.Response.Headers.Append("HX-Redirect", "/");
+        return Results.Redirect("/");
     }
 
     public static IEndpointRouteBuilder MapAuthenticaton(this IEndpointRouteBuilder builder)
@@ -28,7 +27,7 @@ public static class AuthenticationEndpoints
         builder.MapGet("/register", Auth<Register>).ExcludeFromDescription();
 
         builder.MapPost("/login",
-                async (HttpContext context, UserManagementService userManagementService) =>
+                async ([FromForm] LoginRequest request, HttpContext context, UserManagementService userManagementService) =>
                 {
                     if (context.User.Identity is { IsAuthenticated: true })
                     {
@@ -36,27 +35,23 @@ public static class AuthenticationEndpoints
                         return Results.Ok();
                     }
 
-                    var form = context.Request.Form;
-                    var username = form["username"];
-                    var password = form["password"];
-
-                    var user = await userManagementService.Exists(username);
+                    var user = await userManagementService.Exists(request.Username);
 
                     if (user == null)
                         return new RazorHxResult<Login>(new
                         {
-                            Username = username.ToString(),
+                            Username = request.Username,
                         }).WithOutOfBand<ErrorSnackbar>(new
                         {
                             Message = "The username or password is incorrect.",
                         });
 
-                    var passwordMatch = UserManagementService.PasswordMatch(password, user.PasswordHash);
+                    var passwordMatch = UserManagementService.PasswordMatch(request.Password, user.PasswordHash);
 
                     if (!passwordMatch)
                         return new RazorHxResult<Login>(new
                         {
-                            Username = username.ToString(),
+                            Username = request.Username,
                         }).WithOutOfBand<ErrorSnackbar>(new
                         {
                             Message = "The username or password is incorrect.",
@@ -82,7 +77,7 @@ public static class AuthenticationEndpoints
             .DisableAntiforgery();
 
         builder.MapPost("/register",
-                async (HttpContext context, UserManagementService userManagementService) =>
+                async ([FromForm] RegisterRequest request, HttpContext context, UserManagementService userManagementService) =>
                 {
                     if (context.User.Identity is { IsAuthenticated: true })
                     {
@@ -90,50 +85,45 @@ public static class AuthenticationEndpoints
                         return Results.Ok();
                     }
 
-                    var form = context.Request.Form;
-                    var username = form["username"];
-                    var password = form["password"];
-                    var repeat = form["repeat"];
-
-                    if (string.IsNullOrWhiteSpace(username))
+                    if (string.IsNullOrWhiteSpace(request.Username))
                         return new RazorHxResult<Register>(new
                         {
-                            Username = username.ToString(),
+                            Username = request.Username,
                         }).WithOutOfBand<ErrorSnackbar>(new
                         {
                             Message = "The username is required.",
                         });
-                    
-                    if (string.IsNullOrWhiteSpace(password))
+
+                    if (string.IsNullOrWhiteSpace(request.Password))
                         return new RazorHxResult<Register>(new
                         {
-                            Username = username.ToString(),
+                            Username = request.Username,
                         }).WithOutOfBand<ErrorSnackbar>(new
                         {
                             Message = "The password is required.",
                         });
-                    
-                    if (password != repeat)
+
+                    if (request.Password != request.ConfirmPassword)
                         return new RazorHxResult<Register>(new
                         {
-                            Username = username.ToString(),
+                            Username = request.Username,
                         }).WithOutOfBand<ErrorSnackbar>(new
                         {
                             Message = "The passwords do not match.",
                         });
 
-                    var user = await userManagementService.Exists(username);
+                    var user = await userManagementService.Exists(request.Username);
 
                     if (user != null)
                         return new RazorHxResult<Register>(new
                         {
-                            Username = username.ToString(),
+                            Username = request.Username,
                         }).WithOutOfBand<ErrorSnackbar>(new
                         {
                             Message = "The username is already taken.",
                         });
 
-                    _ = await userManagementService.Create(username, password);
+                    _ = await userManagementService.Create(request.Username, request.Password);
 
                     context.Response.Headers.Append("HX-Redirect", "/");
 

@@ -5,7 +5,7 @@
     <div class="tabs">
         <a class="active" data-ui="#manually-tab">
             <i>potted_plant</i>
-            <span>Manually</span>
+            <span>Sensorless</span>
         </a>
         <a data-ui="#sensor-tab">
             <i>sensors</i>
@@ -13,11 +13,11 @@
         </a>
     </div>
     <div id="manually-tab" class="page top-padding active">
-        <form hx-post="/api/plants/manually" hx-on:plant-added="ui('#add-plant')">
+        <form hx-post="/api/plants/sensorless" hx-on:plants-changed="ui('#add-plant')">
             <div class="s12 grid top-padding">
                 <div class="s12">
                     <div class="s12 field label border no-margin">
-                        <input type="text" name="manuallyName" value="@_plantName">
+                        <input type="text" name="name" value="@_plantName" required>
                         <label>Name</label>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
         </form>
     </div>
     <div id="sensor-tab" class="page top-padding">
-        <form hx-post="/api/plants/sensor" hx-on:plant-added="ui('#add-plant')">
+        <form hx-post="/api/plants/sensor" hx-on:plants-changed="ui('#add-plant')">
             <div class="s12 grid">
                 <PlantSensorScanner/>
             </div>

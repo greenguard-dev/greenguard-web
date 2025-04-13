@@ -37,6 +37,16 @@
                     </button>
                     <button class="transparent circle">
                         <i>settings</i>
+                        <menu class="left no-wrap">
+                            <li>
+                                <i>edit</i>
+                                <span>Edit</span>
+                            </li>
+                            <li hx-delete="/api/plants/@Plant.Id">
+                                <i>delete</i>
+                                <span>Delete</span>
+                            </li>
+                        </menu>
                     </button>
                 </div>
             </div>
@@ -125,7 +135,7 @@
     [Parameter, EditorRequired] public required Plant Plant { get; set; }
     [Parameter, EditorRequired] public required PlantMeasurement? PlantMeasurement { get; set; }
 
-    private ManuelPlant? _manuelPlant;
+    private SensorlessPlant? _manuelPlant;
     private SensorPlant? _sensorPlant;
     private ManuelMeasurement? _manuelMeasurement;
     private SensorMeasurement? _sensorMeasurement;
@@ -137,7 +147,7 @@
             case SensorPlant sensorPlant:
                 _sensorPlant = sensorPlant;
                 break;
-            case ManuelPlant manuelPlant:
+            case SensorlessPlant manuelPlant:
                 _manuelPlant = manuelPlant;
                 break;
         }

@@ -8,7 +8,7 @@
 
     <div id="plant-list" class="grid"
          hx-get="/plants"
-         hx-trigger="plant-added from:body"
+         hx-trigger="plants-changed from:body"
          hx-select="#plant-list"
          hx-target="#plant-list"
          hx-swap="outerHTML">
