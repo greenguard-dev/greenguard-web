@@ -105,6 +105,16 @@
             </button>
             <button class="transparent circle">
                 <i>settings</i>
+                <menu class="left no-wrap">
+                    <li>
+                        <i>edit</i>
+                        <span>Edit</span>
+                    </li>
+                    <li hx-delete="/api/plants/@Plant.Id">
+                        <i>delete</i>
+                        <span>Delete</span>
+                    </li>
+                </menu>
             </button>
         </div>
         @if (_sensorPlant != null && _sensorMeasurement != null)
